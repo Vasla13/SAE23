@@ -49,7 +49,7 @@ class Note(models.Model):
     examen = models.ForeignKey(Examen, on_delete=models.CASCADE)
     etudiant = models.ForeignKey(Etudiant, on_delete=models.CASCADE)
     note = models.FloatField()
-    appreciation = models.TextField()
+    appreciation = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.etudiant} - {self.examen}'
