@@ -6,7 +6,7 @@ class Etudiant(models.Model):
     prenom = models.CharField(max_length=100)
     groupe = models.CharField(max_length=100)
     photo = models.ImageField(upload_to='photos/', null=True, blank=True)
-    email = models.EmailField(null=True, blank=True)
+    email = models.EmailField()
 
     def __str__(self):
         return f'{self.nom} {self.prenom}'
