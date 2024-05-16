@@ -6,7 +6,7 @@ class Etudiant(models.Model):
     prenom = models.CharField(max_length=100)
     groupe = models.CharField(max_length=100)
     photo = models.ImageField(upload_to='photos/', null=True, blank=True)
-    email = models.EmailField()
+    email = models.EmailField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.nom} {self.prenom}'
@@ -24,7 +24,7 @@ class Ressource(models.Model):
     ue = models.ForeignKey(UE, on_delete=models.CASCADE)
     code_ressource = models.CharField(max_length=10)
     nom = models.CharField(max_length=100)
-    descriptif = models.TextField()
+    descriptif = models.TextField(null=True, blank=True)
     coefficient = models.FloatField()
 
     def __str__(self):
@@ -39,7 +39,7 @@ class Enseignant(models.Model):
 
 class Examen(models.Model):
     titre = models.CharField(max_length=100)
-    date = models.DateField()
+    date = models.DateField(null=True, blank=True)
     coefficient = models.FloatField()
 
     def __str__(self):

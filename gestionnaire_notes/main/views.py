@@ -52,7 +52,7 @@ def import_data(request):
                     etudiant = Etudiant.objects.get(id=row[1])
                     Note.objects.create(examen=examen, etudiant=etudiant, note=row[2], appreciation=row[3])
 
-        return HttpResponse('File uploaded and processed successfully')
+        return HttpResponse('<a href="">← Home</a> <p>File uploaded and processed successfully</p>')
     return render(request, 'main/import.html')
 
 def export_data(request):
