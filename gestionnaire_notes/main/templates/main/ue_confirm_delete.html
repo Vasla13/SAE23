@@ -1,0 +1,13 @@
+{% extends "main/base.html" %}
+
+{% block title %}Supprimer UE{% endblock %}
+
+{% block content %}
+    <h1>Supprimer UE</h1>
+    <p>Êtes-vous sûr de vouloir supprimer {{ ue.nom }} ?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Supprimer</button>
+        <a href="{% url 'ue_list' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+{% endblock %}

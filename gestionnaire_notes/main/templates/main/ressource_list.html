@@ -1,0 +1,19 @@
+{% extends "main/base.html" %}
+
+{% block title %}Liste des Ressources{% endblock %}
+
+{% block content %}
+    <h1>Liste des Ressources</h1>
+    <a href="{% url 'ressource_create' %}" class="btn btn-primary mb-2">Ajouter une Ressource</a>
+    <ul class="list-group">
+        {% for ressource in ressources %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a href="{% url 'ressource_detail' ressource.pk %}">{{ ressource.nom }}</a>
+                <div>
+                    <a href="{% url 'ressource_update' ressource.pk %}" class="btn btn-secondary btn-sm">Modifier</a>
+                    <a href="{% url 'ressource_delete' ressource.pk %}" class="btn btn-danger btn-sm">Supprimer</a>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

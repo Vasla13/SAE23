@@ -1,0 +1,14 @@
+{% extends "main/base.html" %}
+
+{% block title %}Relevé de Notes{% endblock %}
+
+{% block content %}
+    <h1>Relevé de Notes pour {{ etudiant.nom }} {{ etudiant.prenom }}</h1>
+    <ul class="list-group">
+        {% for note in notes %}
+            <li class="list-group-item">
+                <strong>{{ note.examen.titre }} :</strong> {{ note.note }} ({{ note.appreciation }})
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

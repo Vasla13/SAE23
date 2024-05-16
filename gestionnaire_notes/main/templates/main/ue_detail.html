@@ -1,0 +1,11 @@
+{% extends "main/base.html" %}
+
+{% block title %}Détails de l'UE{% endblock %}
+
+{% block content %}
+    <h1>{{ ue.nom }}</h1>
+    <p><strong>Code :</strong> {{ ue.code }}</p>
+    <p><strong>Semestre :</strong> {{ ue.semestre }}</p>
+    <p><strong>Crédits ECTS :</strong> {{ ue.credit_ects }}</p>
+    <a href="{% url 'ue_update' ue.pk %}" class="btn btn-secondary mt-3">Modifier</a>
+{% endblock %}

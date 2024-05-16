@@ -1,0 +1,8 @@
+{% extends "main/base.html" %}
+
+{% block title %}Détails de l'Enseignant{% endblock %}
+
+{% block content %}
+    <h1>{{ enseignant.nom }} {{ enseignant.prenom }}</h1>
+    <a href="{% url 'enseignant_update' enseignant.pk %}" class="btn btn-secondary mt-3">Modifier</a>
+{% endblock %}

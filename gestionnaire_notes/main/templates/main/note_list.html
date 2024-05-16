@@ -1,0 +1,19 @@
+{% extends "main/base.html" %}
+
+{% block title %}Liste des Notes{% endblock %}
+
+{% block content %}
+    <h1>Liste des Notes</h1>
+    <a href="{% url 'note_create' %}" class="btn btn-primary mb-2">Ajouter une Note</a>
+    <ul class="list-group">
+        {% for note in notes %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a href="{% url 'note_detail' note.pk %}">{{ note.etudiant.nom }} - {{ note.examen.titre }}</a>
+                <div>
+                    <a href="{% url 'note_update' note.pk %}" class="btn btn-secondary btn-sm">Modifier</a>
+                    <a href="{% url 'note_delete' note.pk %}" class="btn btn-danger btn-sm">Supprimer</a>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

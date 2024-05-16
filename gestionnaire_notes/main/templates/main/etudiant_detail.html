@@ -1,0 +1,12 @@
+{% extends "main/base.html" %}
+
+{% block title %}Détails de l'Étudiant{% endblock %}
+
+{% block content %}
+    <h1>{{ etudiant.nom }} {{ etudiant.prenom }}</h1>
+    <p><strong>Numéro étudiant :</strong> {{ etudiant.numero_etudiant }}</p>
+    <p><strong>Groupe :</strong> {{ etudiant.groupe }}</p>
+    <p><strong>Email :</strong> {{ etudiant.email }}</p>
+    <img src="{{ etudiant.photo.url }}" alt="Photo de {{ etudiant.nom }}" class="img-thumbnail">
+    <a href="{% url 'etudiant_update' etudiant.pk %}" class="btn btn-secondary mt-3">Modifier</a>
+{% endblock %}

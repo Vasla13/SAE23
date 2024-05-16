@@ -1,0 +1,12 @@
+{% extends "main/base.html" %}
+
+{% block title %}Ajouter/Modifier Examen{% endblock %}
+
+{% block content %}
+    <h2>{% if form.instance.pk %}Modifier Examen{% else %}Ajouter Examen{% endif %}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">{% if form.instance.pk %}Modifier{% else %}Ajouter{% endif %}</button>
+    </form>
+{% endblock %}

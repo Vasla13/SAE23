@@ -1,0 +1,12 @@
+{% extends "main/base.html" %}
+
+{% block title %}Ajouter/Modifier Enseignant{% endblock %}
+
+{% block content %}
+    <h2>{% if form.instance.pk %}Modifier Enseignant{% else %}Ajouter Enseignant{% endif %}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">{% if form.instance.pk %}Modifier{% else %}Ajouter{% endif %}</button>
+    </form>
+{% endblock %}

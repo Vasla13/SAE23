@@ -1,0 +1,19 @@
+{% extends "main/base.html" %}
+
+{% block title %}Liste des Enseignants{% endblock %}
+
+{% block content %}
+    <h1>Liste des Enseignants</h1>
+    <a href="{% url 'enseignant_create' %}" class="btn btn-primary mb-2">Ajouter un Enseignant</a>
+    <ul class="list-group">
+        {% for enseignant in enseignants %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a href="{% url 'enseignant_detail' enseignant.pk %}">{{ enseignant.nom }} {{ enseignant.prenom }}</a>
+                <div>
+                    <a href="{% url 'enseignant_update' enseignant.pk %}" class="btn btn-secondary btn-sm">Modifier</a>
+                    <a href="{% url 'enseignant_delete' enseignant.pk %}" class="btn btn-danger btn-sm">Supprimer</a>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

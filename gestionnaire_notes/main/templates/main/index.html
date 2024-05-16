@@ -1,0 +1,13 @@
+{% extends "main/base.html" %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+    <div class="jumbotron">
+        <h1 class="display-4">Bienvenue au Gestionnaire de Notes</h1>
+        <p class="lead">Cette application vous permet de gérer les étudiants, les unités d'enseignement, les ressources, les enseignants, les examens, et les notes.</p>
+        <hr class="my-4">
+        <p>Utilisez le menu de navigation pour accéder aux différentes sections de l'application.</p>
+        <a class="btn btn-primary btn-lg" href="{% url 'etudiant_list' %}" role="button">Voir les Étudiants</a>
+    </div>
+{% endblock %}

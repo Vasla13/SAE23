@@ -1,0 +1,11 @@
+{% extends "main/base.html" %}
+
+{% block title %}Détails de la Ressource{% endblock %}
+
+{% block content %}
+    <h1>{{ ressource.nom }}</h1>
+    <p><strong>Code :</strong> {{ ressource.code_ressource }}</p>
+    <p><strong>Descriptif :</strong> {{ ressource.descriptif }}</p>
+    <p><strong>Coefficient :</strong> {{ ressource.coefficient }}</p>
+    <a href="{% url 'ressource_update' ressource.pk %}" class="btn btn-secondary mt-3">Modifier</a>
+{% endblock %}
