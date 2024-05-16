@@ -49,6 +49,12 @@ urlpatterns = [
     # URL for file upload
     path('upload/', views.upload_file, name='upload_file'),
 
+    # URL for data export
+    path('export/', views.export_data, name='export_data'),
+
+    # URL for data import
+    path('import/', views.import_data, name='import_data'),
+
     # URL for grade report
     path('grade_report/<int:pk>/', views.grade_report, name='grade_report'),
 ]

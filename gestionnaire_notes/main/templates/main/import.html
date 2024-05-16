@@ -1,0 +1,24 @@
+{% extends "main/base.html" %}
+
+{% block title %}Importer un fichier CSV{% endblock %}
+
+{% block content %}
+    <h2>Importer un fichier CSV</h2>
+    <p>Le fichier doit être au format CSV avec les sections suivantes :</p>
+    <ul>
+        <li>Etudiants : N°étudiant, Nom, Prénom, Groupe, Photo, Email</li>
+        <li>UEs : Code, Nom, Semestre, Crédit ECTS</li>
+        <li>Ressources : Code Ressource, Nom, Descriptif, Coefficient</li>
+        <li>Enseignants : ID, Nom, Prénom</li>
+        <li>Examens : ID, Titre, Date, Coefficient</li>
+        <li>Notes : Examen ID, Étudiant ID, Note, Appréciation</li>
+    </ul>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="file">Sélectionnez un fichier CSV</label>
+            <input type="file" class="form-control-file" id="file" name="file">
+        </div>
+        <button type="submit" class="btn btn-primary">Importer</button>
+    </form>
+{% endblock %}

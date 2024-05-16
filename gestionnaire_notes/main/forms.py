@@ -32,8 +32,6 @@ class ExamenForm(forms.ModelForm):
         model = Examen
         fields = ['titre', 'date', 'coefficient']
 
-# Vous pouvez également personnaliser d'autres formulaires si nécessaire
-
 
 class NoteForm(forms.ModelForm):
     class Meta:
@@ -42,3 +40,5 @@ class NoteForm(forms.ModelForm):
 
 class UploadFileForm(forms.Form):
     file = forms.FileField()
+
+
