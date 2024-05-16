@@ -55,57 +55,69 @@ def import_data(request):
         return HttpResponse('File uploaded and processed successfully')
     return render(request, 'main/import.html')
 
+from .forms import ExportDataForm
+
+from django.http import HttpResponse
+import csv
+from .models import Etudiant, UE, Ressource, Enseignant, Examen, Note
+from .forms import ExportDataForm
+
 def export_data(request):
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="exported_data.csv"'
+    if request.method == 'POST':
+        form = ExportDataForm(request.POST)
+        if form.is_valid():
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="exported_data.csv"'
+            writer = csv.writer(response)
+            
+            if 'etudiants' in request.POST:
+                etudiants = form.cleaned_data['etudiants']
+                writer.writerow(['Etudiants'])
+                writer.writerow(['N°étudiant', 'Nom', 'Prénom', 'Groupe', 'Photo', 'Email'])
+                for etudiant in etudiants:
+                    photo_url = request.build_absolute_uri(etudiant.photo.url) if etudiant.photo else ''
+                    writer.writerow([etudiant.numero_etudiant, etudiant.nom, etudiant.prenom, etudiant.groupe, photo_url, etudiant.email])
+            
+            if 'ues' in request.POST:
+                ues = form.cleaned_data['ues']
+                writer.writerow(['UEs'])
+                writer.writerow(['Code', 'Nom', 'Semestre', 'Crédit ECTS'])
+                for ue in ues:
+                    writer.writerow([ue.code, ue.nom, ue.semestre, ue.credit_ects])
 
-    writer = csv.writer(response)
-    
-    # Exporting Etudiants
-    etudiants = Etudiant.objects.all()
-    writer.writerow(['Etudiants'])
-    writer.writerow(['N°étudiant', 'Nom', 'Prénom', 'Groupe', 'Photo', 'Email'])
-    for etudiant in etudiants:
-        photo_url = request.build_absolute_uri(etudiant.photo.url) if etudiant.photo else ''
-        writer.writerow([etudiant.numero_etudiant, etudiant.nom, etudiant.prenom, etudiant.groupe, photo_url, etudiant.email])
-    
-    # Exporting UEs
-    ues = UE.objects.all()
-    writer.writerow(['UEs'])
-    writer.writerow(['Code', 'Nom', 'Semestre', 'Crédit ECTS'])
-    for ue in ues:
-        writer.writerow([ue.code, ue.nom, ue.semestre, ue.credit_ects])
+            if 'ressources' in request.POST:
+                ressources = form.cleaned_data['ressources']
+                writer.writerow(['Ressources'])
+                writer.writerow(['Code Ressource', 'Nom', 'Descriptif', 'Coefficient'])
+                for ressource in ressources:
+                    writer.writerow([ressource.code_ressource, ressource.nom, ressource.descriptif, ressource.coefficient])
 
-    # Exporting Ressources
-    ressources = Ressource.objects.all()
-    writer.writerow(['Ressources'])
-    writer.writerow(['Code Ressource', 'Nom', 'Descriptif', 'Coefficient'])
-    for ressource in ressources:
-        writer.writerow([ressource.code_ressource, ressource.nom, ressource.descriptif, ressource.coefficient])
+            if 'enseignants' in request.POST:
+                enseignants = form.cleaned_data['enseignants']
+                writer.writerow(['Enseignants'])
+                writer.writerow(['ID', 'Nom', 'Prénom'])
+                for enseignant in enseignants:
+                    writer.writerow([enseignant.id, enseignant.nom, enseignant.prenom])
 
-    # Exporting Enseignants
-    enseignants = Enseignant.objects.all()
-    writer.writerow(['Enseignants'])
-    writer.writerow(['ID', 'Nom', 'Prénom'])
-    for enseignant in enseignants:
-        writer.writerow([enseignant.id, enseignant.nom, enseignant.prenom])
+            if 'examens' in request.POST:
+                examens = form.cleaned_data['examens']
+                writer.writerow(['Examens'])
+                writer.writerow(['ID', 'Titre', 'Date', 'Coefficient'])
+                for examen in examens:
+                    writer.writerow([examen.id, examen.titre, examen.date, examen.coefficient])
 
-    # Exporting Examens
-    examens = Examen.objects.all()
-    writer.writerow(['Examens'])
-    writer.writerow(['ID', 'Titre', 'Date', 'Coefficient'])
-    for examen in examens:
-        writer.writerow([examen.id, examen.titre, examen.date, examen.coefficient])
+            if 'notes' in request.POST:
+                notes = form.cleaned_data['notes']
+                writer.writerow(['Notes'])
+                writer.writerow(['Examen', 'Étudiant', 'Note', 'Appréciation'])
+                for note in notes:
+                    writer.writerow([note.examen.id, note.etudiant.id, note.note, note.appreciation])
 
-    # Exporting Notes
-    notes = Note.objects.all()
-    writer.writerow(['Notes'])
-    writer.writerow(['Examen', 'Étudiant', 'Note', 'Appréciation'])
-    for note in notes:
-        writer.writerow([note.examen.id, note.etudiant.id, note.note, note.appreciation])
+            return response
 
-    return response
-
+    else:
+        form = ExportDataForm()
+    return render(request, 'main/export.html', {'form': form})
 
 
 def note_create(request):
