@@ -1,0 +1,147 @@
+{% extends "main/base.html" %}
+
+{% block title %}Relevé de Notes{% endblock %}
+
+{% block content %}
+    <h2>Relevé de Notes</h2>
+    
+    {% if etudiants %}
+        <h3>Étudiants</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>N°étudiant</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Groupe</th>
+                    <th>Photo</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for etudiant in etudiants %}
+                    <tr>
+                        {% for item in etudiant %}
+                            <td>{{ item }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% if ues %}
+        <h3>Unités d'enseignement (UE)</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Nom</th>
+                    <th>Semestre</th>
+                    <th>Crédit ECTS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ue in ues %}
+                    <tr>
+                        {% for item in ue %}
+                            <td>{{ item }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% if ressources %}
+        <h3>Ressources</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Code Ressource</th>
+                    <th>Nom</th>
+                    <th>Descriptif</th>
+                    <th>Coefficient</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ressource in ressources %}
+                    <tr>
+                        {% for item in ressource %}
+                            <td>{{ item }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% if enseignants %}
+        <h3>Enseignants</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for enseignant in enseignants %}
+                    <tr>
+                        {% for item in enseignant %}
+                            <td>{{ item }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% if examens %}
+        <h3>Examens</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Titre</th>
+                    <th>Date</th>
+                    <th>Coefficient</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for examen in examens %}
+                    <tr>
+                        {% for item in examen %}
+                            <td>{{ item }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% if notes %}
+        <h3>Notes</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Examen</th>
+                    <th>Étudiant</th>
+                    <th>Note</th>
+                    <th>Appréciation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for note in notes %}
+                    <tr>
+                        {% for item in note %}
+                            <td>{{ item }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+{% endblock %}

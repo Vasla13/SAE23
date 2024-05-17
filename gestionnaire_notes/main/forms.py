@@ -39,7 +39,7 @@ class NoteForm(forms.ModelForm):
         fields = ['examen', 'etudiant', 'note', 'appreciation']
 
 class UploadFileForm(forms.Form):
-    file = forms.FileField()
+    file = forms.FileField(label='Choisir un fichier CSV')
 
 
 class ExportDataForm(forms.Form):
