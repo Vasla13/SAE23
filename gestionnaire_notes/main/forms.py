@@ -39,6 +39,26 @@ class NoteForm(forms.ModelForm):
         fields = ['examen', 'etudiant', 'note', 'appreciation']
 
 class UploadFileForm(forms.Form):
-    file = forms.FileField()
+    file = forms.FileField(label='Choisir un fichier CSV')
 
 
+class ExportDataForm(forms.Form):
+    etudiants = forms.ModelMultipleChoiceField(
+        queryset=Etudiant.objects.all(), required=False, label='Étudiants', widget=forms.CheckboxSelectMultiple
+    )
+    ues = forms.ModelMultipleChoiceField(
+        queryset=UE.objects.all(), required=False, label='Unités d\'enseignement (UE)', widget=forms.CheckboxSelectMultiple
+    )
+    ressources = forms.ModelMultipleChoiceField(
+        queryset=Ressource.objects.all(), required=False, label='Ressources', widget=forms.CheckboxSelectMultiple
+    )
+    enseignants = forms.ModelMultipleChoiceField(
+        queryset=Enseignant.objects.all(), required=False, label='Enseignants', widget=forms.CheckboxSelectMultiple
+    )
+    examens = forms.ModelMultipleChoiceField(
+        queryset=Examen.objects.all(), required=False, label='Examens', widget=forms.CheckboxSelectMultiple
+    )
+    notes = forms.ModelMultipleChoiceField(
+        queryset=Note.objects.all(), required=False, label='Notes', widget=forms.CheckboxSelectMultiple
+    )
+    
