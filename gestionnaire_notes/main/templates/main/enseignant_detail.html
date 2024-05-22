@@ -4,5 +4,8 @@
 
 {% block content %}
     <h1>{{ enseignant.nom }} {{ enseignant.prenom }}</h1>
+    {% csrf_token %}
+    <p><strong>N° Professeur :</strong> p{{ enseignant.numero_professeur }}</p>
+    <p><strong>Email :</strong> <a href="mailto:{{ enseignant.email }}"">{{ enseignant.email }}</a></p>
     <a href="{% url 'enseignant_update' enseignant.pk %}" class="btn btn-secondary mt-3">Modifier</a>
 {% endblock %}

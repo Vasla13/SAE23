@@ -4,9 +4,9 @@
 
 {% block content %}
     <h1>{{ etudiant.nom }} {{ etudiant.prenom }}</h1>
-    <p><strong>N° Étudiant :</strong> {{ etudiant.numero_etudiant }}</p>
+    <p><strong>N° Étudiant :</strong> e{{ etudiant.numero_etudiant }}</p>
     <p><strong>Groupe :</strong> {{ etudiant.groupe }}</p>
-    <p><strong>Email :</strong> {{ etudiant.email }}</p>
+    <p><strong>Email :</strong> <a href="mailto:{{ etudiant.email }}">{{ etudiant.email }}</a></p>
     {% if etudiant.photo %}
         <img src="{{ etudiant.photo.url }}" alt="Photo de {{ etudiant.nom }}" class="img-fluid", height="128", width="128">
         <p></p>

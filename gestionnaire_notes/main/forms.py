@@ -1,10 +1,16 @@
 from django import forms
-from .models import Etudiant, UE, Ressource, Enseignant, Examen, Note
+from django.forms import inlineformset_factory
+from .models import Etudiant, UE, Ressource, Enseignant, Examen, Note, RessourceUE, Groupe
 
 class EtudiantForm(forms.ModelForm):
     class Meta:
         model = Etudiant
-        fields = ['numero_etudiant', 'nom', 'prenom', 'groupe', 'photo', 'email']
+        fields = ['numero_etudiant','nom', 'prenom', 'groupe', 'photo', 'email']
+        
+class GroupeForm(forms.ModelForm):
+    class Meta:
+        model = Groupe
+        fields = ['identifiant', 'email']
 
 class UEForm(forms.ModelForm):
     class Meta:
@@ -14,18 +20,21 @@ class UEForm(forms.ModelForm):
 class RessourceForm(forms.ModelForm):
     class Meta:
         model = Ressource
-        fields = ['ue', 'code_ressource', 'nom', 'descriptif', 'coefficient']
+        fields = ['code', 'nom', 'description']
+        
+RessourceUEFormSet = inlineformset_factory(
+    Ressource, RessourceUE, fields=('unite_enseignement', 'coefficient'), extra=1, can_delete=True)
 
 class EnseignantForm(forms.ModelForm):
     class Meta:
         model = Enseignant
-        fields = ['nom', 'prenom']
+        fields = ['numero_professeur','nom', 'prenom', 'email']
 
 
 class ExamenForm(forms.ModelForm):
     class Meta:
         model = Examen
-        fields = ['titre', 'enseignant']
+        fields = ['titre', 'enseignants', 'ressource']
 
 
 class NoteForm(forms.ModelForm):

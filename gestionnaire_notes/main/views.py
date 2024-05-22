@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Etudiant, UE, Ressource, Enseignant, Examen, Note
-from .forms import EtudiantForm, UEForm, RessourceForm, EnseignantForm, ExamenForm, NoteForm, UploadFileForm
+from .models import Etudiant, UE, Ressource, Enseignant, Examen, Note, RessourceUE, Groupe
+from .forms import EtudiantForm, UEForm, RessourceForm, EnseignantForm, ExamenForm, NoteForm, UploadFileForm, RessourceUEFormSet, GroupeForm
 from django import forms
 import csv
 from django.http import HttpResponse
@@ -182,6 +182,42 @@ def upload_file(request):
         form = UploadFileForm()
     return render(request, 'main/upload.html', {'form': form})
 
+# CRUD views for Groupe
+def groupe_list(request):
+    groupes = Groupe.objects.all()
+    return render(request, 'main/groupe_list.html', {'groupes': groupes})
+
+def groupe_detail(request, pk):
+    groupe = get_object_or_404(Groupe, pk=pk)
+    return render(request, 'main/groupe_detail.html', {'groupe': groupe})
+
+def groupe_create(request):
+    if request.method == 'POST':
+        form = GroupeForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('groupe_list')
+    else:
+        form = GroupeForm()
+    return render(request, 'main/groupe_form.html', {'form': form})
+
+def groupe_update(request, pk):
+    groupe = get_object_or_404(Groupe, pk=pk)
+    if request.method == 'POST':
+        form = GroupeForm(request.POST, request.FILES, instance=groupe)
+        if form.is_valid():
+            form.save()
+            return redirect('groupe_list')
+    else:
+        form = GroupeForm(instance=groupe)
+    return render(request, 'main/groupe_form.html', {'form': form})
+
+def groupe_delete(request, pk):
+    groupe = get_object_or_404(Groupe, pk=pk)
+    if request.method == 'POST':
+        groupe.delete()
+        return redirect('groupe_list')
+    return render(request, 'main/groupe_confirm_delete.html', {'groupe': groupe})
 
 # CRUD views for Etudiant
 def etudiant_list(request):
@@ -211,7 +247,8 @@ def etudiant_update(request, pk):
             return redirect('etudiant_list')
     else:
         form = EtudiantForm(instance=etudiant)
-    return render(request, 'main/etudiant_form.html', {'form': form})
+    return render(request, 'main/etudiant_form.html', {'form': form, 'etudiant': etudiant})
+
 
 def etudiant_delete(request, pk):
     etudiant = get_object_or_404(Etudiant, pk=pk)
@@ -264,33 +301,47 @@ def ressource_list(request):
 
 def ressource_detail(request, pk):
     ressource = get_object_or_404(Ressource, pk=pk)
-    return render(request, 'main/ressource_detail.html', {'ressource': ressource})
+    coefficients = RessourceUE.objects.filter(ressource=ressource)
+    return render(request, 'main/ressource_detail.html', {'ressource': ressource, 'coefficients': coefficients})
 
 def ressource_create(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = RessourceForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('ressource_list')
+        formset = RessourceUEFormSet(request.POST)
+        if form.is_valid() and formset.is_valid():
+            ressource = form.save()
+            formset.instance = ressource
+            formset.save()
+            if 'save_and_add' in request.POST:
+                return redirect('ressource_update', pk=ressource.pk)
+            return redirect('ressource_detail', pk=ressource.pk)
     else:
         form = RessourceForm()
-    return render(request, 'main/ressource_form.html', {'form': form})
+        formset = RessourceUEFormSet()
+    return render(request, 'main/ressource_form.html', {'form': form, 'formset': formset})
 
 def ressource_update(request, pk):
     ressource = get_object_or_404(Ressource, pk=pk)
-    if request.method == 'POST':
+    if request.method == "POST":
         form = RessourceForm(request.POST, instance=ressource)
-        if form.is_valid():
+        formset = RessourceUEFormSet(request.POST, instance=ressource)
+        if form.is_valid() and formset.is_valid():
             form.save()
-            return redirect('ressource_list')
+            formset.save()
+            if 'save_and_add' in request.POST:
+                return redirect('ressource_update', pk=ressource.pk)
+            return redirect('ressource_detail', pk=ressource.pk)
     else:
         form = RessourceForm(instance=ressource)
-    return render(request, 'main/ressource_form.html', {'form': form})
+        formset = RessourceUEFormSet(instance=ressource)
+    return render(request, 'main/ressource_form.html', {'form': form, 'formset': formset})
 
 def ressource_delete(request, pk):
     ressource = get_object_or_404(Ressource, pk=pk)
-    if request.method == 'POST':
+    coefficients = RessourceUE.objects.filter(ressource=ressource)
+    if request.method == "POST":
         ressource.delete()
+        coefficients.delete()
         return redirect('ressource_list')
     return render(request, 'main/ressource_confirm_delete.html', {'ressource': ressource})
 
