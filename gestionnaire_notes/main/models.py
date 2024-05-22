@@ -75,3 +75,4 @@ class Note(models.Model):
 
     def __str__(self):
         return f"{self.examen} - {self.etudiant.nom}"
+

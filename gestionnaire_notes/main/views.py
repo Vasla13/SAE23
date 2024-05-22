@@ -78,6 +78,14 @@ def export_data(request):
 
             writer.writerow(['Relevé de Notes'])
             writer.writerow([])  # Empty row for spacing
+            
+            if 'groupes' in request.POST:
+                ues = form.cleaned_data['ues']
+                writer.writerow(['Groupe'])
+                writer.writerow(['identifiant', 'Nom', 'Crédit ECTS'])
+                for ue in ues:
+                    writer.writerow([ue.code, ue.nom, ue.semestre, ue.credit_ects])
+                writer.writerow([])  # Empty row for spacing
 
             # Exporting Etudiants
             if 'etudiants' in request.POST:
@@ -93,7 +101,7 @@ def export_data(request):
             if 'ues' in request.POST:
                 ues = form.cleaned_data['ues']
                 writer.writerow(['Unités d\'enseignement (UE)'])
-                writer.writerow(['Code', 'Nom', 'Semestre', 'Crédit ECTS'])
+                writer.writerow(['Code', 'Nom', 'Crédit ECTS'])
                 for ue in ues:
                     writer.writerow([ue.code, ue.nom, ue.semestre, ue.credit_ects])
                 writer.writerow([])  # Empty row for spacing
@@ -105,6 +113,13 @@ def export_data(request):
                 writer.writerow(['Code Ressource', 'Nom', 'Descriptif', 'Coefficient'])
                 for ressource in ressources:
                     writer.writerow([ressource.code_ressource, ressource.nom, ressource.descriptif, ressource.coefficient])
+                writer.writerow([])  # Empty row for spacing
+                
+                ressourceues = form.cleaned_data['ressourceues']
+                writer.writerow(['Ressourceues'])
+                writer.writerow(['Ressource', 'UE', 'Coefficient'])
+                for ressourceue in ressourceues:
+                    writer.writerow([ressourceue.ressource, ressourceue.unite_enseignement, ressourceue.coefficient])
                 writer.writerow([])  # Empty row for spacing
 
             # Exporting Enseignants
