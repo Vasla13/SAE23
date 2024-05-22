@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 
 class Etudiant(models.Model):
     numero_etudiant = models.CharField(max_length=100, unique=True)
@@ -38,8 +39,9 @@ class Enseignant(models.Model):
 
 class Examen(models.Model):
     titre = models.CharField(max_length=100)
+    enseignant = models.ForeignKey(Enseignant, on_delete=models.CASCADE)
     date = models.DateField(null=True, blank=True)
-    coefficient = models.FloatField()
+    coefficient = models.FloatField(default='1.0')
 
     def __str__(self):
         return self.titre

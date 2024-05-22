@@ -8,7 +8,7 @@
     <ul class="list-group">
         {% for examen in examens %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
-                <a href="{% url 'examen_detail' examen.pk %}">{{ examen.titre }}</a>
+                <a href="{% url 'examen_detail' examen.pk %}">{{ examen.titre }}_{{ examen.enseignant.nom }}</a>
                 <div>
                     <a href="{% url 'examen_update' examen.pk %}" class="btn btn-secondary btn-sm">Modifier</a>
                     <a href="{% url 'examen_delete' examen.pk %}" class="btn btn-danger btn-sm">Supprimer</a>

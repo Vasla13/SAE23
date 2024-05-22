@@ -7,6 +7,16 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
+
+        <div>
+            <label for="date">Date :</label>
+            <input type="date" id="date" name="date">
+        </div>
+
+        <div>
+            <label for="coefficient">Coefficient :</label>
+            <input type="number" id="coefficient" name="coefficient" step="0.25" value="{{ form.instance.coefficient }}">
+        </div>
         <button type="submit" class="btn btn-primary">{% if form.instance.pk %}Modifier{% else %}Ajouter{% endif %}</button>
     </form>
 {% endblock %}

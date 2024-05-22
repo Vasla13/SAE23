@@ -23,14 +23,9 @@ class EnseignantForm(forms.ModelForm):
 
 
 class ExamenForm(forms.ModelForm):
-    date = forms.DateField(
-        widget=forms.DateInput(format='%d/%m/%Y'),
-        input_formats=['%d/%m/%Y']
-    )
-    
     class Meta:
         model = Examen
-        fields = ['titre', 'date', 'coefficient']
+        fields = ['titre', 'enseignant']
 
 
 class NoteForm(forms.ModelForm):
