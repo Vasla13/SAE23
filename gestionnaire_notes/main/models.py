@@ -14,7 +14,6 @@ class Etudiant(models.Model):
 class UE(models.Model):
     code = models.CharField(max_length=10, unique=True)
     nom = models.CharField(max_length=100)
-    semestre = models.CharField(max_length=10)
     credit_ects = models.IntegerField()
 
     def __str__(self):

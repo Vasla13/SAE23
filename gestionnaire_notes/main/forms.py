@@ -9,7 +9,7 @@ class EtudiantForm(forms.ModelForm):
 class UEForm(forms.ModelForm):
     class Meta:
         model = UE
-        fields = ['code', 'nom', 'semestre', 'credit_ects']
+        fields = ['code', 'nom', 'credit_ects']
 
 class RessourceForm(forms.ModelForm):
     class Meta:
