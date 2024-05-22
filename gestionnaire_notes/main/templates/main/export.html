@@ -65,66 +65,47 @@
     </form>
 
     <script>
+        // Toggle all checkboxes
         document.getElementById('toggle-all').addEventListener('click', function() {
             const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = !allChecked;
-                if (checkbox.id.startsWith('toggle-')) {
-                    const contentId = checkbox.id.replace('toggle-', '');
-                    document.getElementById(contentId).style.display = checkbox.checked ? 'block' : 'none';
-                }
+            const allChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+            checkboxes.forEach(checkbox => checkbox.checked = !allChecked);
+
+            document.querySelectorAll('.category-content').forEach(content => {
+                content.style.display = !allChecked ? 'block' : 'none';
             });
         });
 
-        document.getElementById('toggle-etudiants').addEventListener('change', function() {
-            document.getElementById('etudiants').style.display = this.checked ? 'block' : 'none';
-        });
-        document.getElementById('toggle-ues').addEventListener('change', function() {
-            document.getElementById('ues').style.display = this.checked ? 'block' : 'none';
-        });
-        document.getElementById('toggle-ressources').addEventListener('change', function() {
-            document.getElementById('ressources').style.display = this.checked ? 'block' : 'none';
-        });
-        document.getElementById('toggle-enseignants').addEventListener('change', function() {
-            document.getElementById('enseignants').style.display = this.checked ? 'block' : 'none';
-        });
-        document.getElementById('toggle-examens').addEventListener('change', function() {
-            document.getElementById('examens').style.display = this.checked ? 'block' : 'none';
-        });
-        document.getElementById('toggle-notes').addEventListener('change', function() {
-            document.getElementById('notes').style.display = this.checked ? 'block' : 'none';
-        });
+        // Toggle category checkboxes
+        const toggleCategoryCheckbox = (categoryId, contentId) => {
+            document.getElementById(categoryId).addEventListener('change', function() {
+                document.getElementById(contentId).style.display = this.checked ? 'block' : 'none';
+                const checkboxes = document.querySelectorAll(`#${contentId} input[type="checkbox"]`);
+                checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+            });
+        };
 
-        document.getElementById('toggle-all-etudiants').addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('#etudiants input[type="checkbox"]');
-            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
-        });
+        toggleCategoryCheckbox('toggle-etudiants', 'etudiants');
+        toggleCategoryCheckbox('toggle-ues', 'ues');
+        toggleCategoryCheckbox('toggle-ressources', 'ressources');
+        toggleCategoryCheckbox('toggle-enseignants', 'enseignants');
+        toggleCategoryCheckbox('toggle-examens', 'examens');
+        toggleCategoryCheckbox('toggle-notes', 'notes');
 
-        document.getElementById('toggle-all-ues').addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('#ues input[type="checkbox"]');
-            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
-        });
+        // Toggle all checkboxes within a category
+        const toggleAllCategoryCheckboxes = (toggleAllId, contentId) => {
+            document.getElementById(toggleAllId).addEventListener('change', function() {
+                const checkboxes = document.querySelectorAll(`#${contentId} input[type="checkbox"]`);
+                checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+            });
+        };
 
-        document.getElementById('toggle-all-ressources').addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('#ressources input[type="checkbox"]');
-            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
-        });
-
-        document.getElementById('toggle-all-enseignants').addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('#enseignants input[type="checkbox"]');
-            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
-        });
-
-        document.getElementById('toggle-all-examens').addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('#examens input[type="checkbox"]');
-            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
-        });
-
-        document.getElementById('toggle-all-notes').addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('#notes input[type="checkbox"]');
-            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
-        });
+        toggleAllCategoryCheckboxes('toggle-all-etudiants', 'etudiants');
+        toggleAllCategoryCheckboxes('toggle-all-ues', 'ues');
+        toggleAllCategoryCheckboxes('toggle-all-ressources', 'ressources');
+        toggleAllCategoryCheckboxes('toggle-all-enseignants', 'enseignants');
+        toggleAllCategoryCheckboxes('toggle-all-examens', 'examens');
+        toggleAllCategoryCheckboxes('toggle-all-notes', 'notes');
     </script>
 
     <style>
