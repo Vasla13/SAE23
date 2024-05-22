@@ -8,7 +8,8 @@
     <p><strong>Groupe :</strong> {{ etudiant.groupe }}</p>
     <p><strong>Email :</strong> {{ etudiant.email }}</p>
     {% if etudiant.photo %}
-        <img src="{{ etudiant.photo.url }}" alt="Photo de {{ etudiant.nom }}" class="img-fluid">
+        <img src="{{ etudiant.photo.url }}" alt="Photo de {{ etudiant.nom }}" class="img-fluid", height="128", width="128">
+        <p></p>
     {% else %}
         <p>Aucune photo disponible</p>
     {% endif %}

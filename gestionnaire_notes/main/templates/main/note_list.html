@@ -8,7 +8,7 @@
     <ul class="list-group">
         {% for note in notes %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
-                <a href="{% url 'note_detail' note.pk %}">{{ note.etudiant.nom }} - {{ note.examen.titre }}</a>
+                <a href="{% url 'note_detail' note.pk %}">{{ note.etudiant.nom }} - {{ note.examen.titre }}</a> {{ note.note }}
                 <div>
                     <a href="{% url 'note_update' note.pk %}" class="btn btn-secondary btn-sm">Modifier</a>
                     <a href="{% url 'note_delete' note.pk %}" class="btn btn-danger btn-sm">Supprimer</a>

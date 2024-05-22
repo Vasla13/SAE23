@@ -24,7 +24,7 @@ class Ressource(models.Model):
     ue = models.ForeignKey(UE, on_delete=models.CASCADE)
     code_ressource = models.CharField(max_length=10)
     nom = models.CharField(max_length=100)
-    descriptif = models.TextField()
+    descriptif = models.TextField(null=True, blank=True)
     coefficient = models.FloatField()
 
     def __str__(self):
@@ -39,7 +39,7 @@ class Enseignant(models.Model):
 
 class Examen(models.Model):
     titre = models.CharField(max_length=100)
-    date = models.DateField()
+    date = models.DateField(null=True, blank=True)
     coefficient = models.FloatField()
 
     def __str__(self):
@@ -49,7 +49,7 @@ class Note(models.Model):
     examen = models.ForeignKey(Examen, on_delete=models.CASCADE)
     etudiant = models.ForeignKey(Etudiant, on_delete=models.CASCADE)
     note = models.FloatField()
-    appreciation = models.TextField()
+    appreciation = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.etudiant} - {self.examen}'
