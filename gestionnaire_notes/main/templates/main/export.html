@@ -12,6 +12,7 @@
                 <input type="checkbox" id="toggle-etudiants"> Étudiants
             </label>
             <div id="etudiants" class="category-content" style="display: none;">
+                <label><input type="checkbox" id="toggle-all-etudiants"> Tout cocher/décocher</label>
                 {{ form.etudiants }}
             </div>
         </div>
@@ -20,6 +21,7 @@
                 <input type="checkbox" id="toggle-ues"> Unités d'enseignement (UE)
             </label>
             <div id="ues" class="category-content" style="display: none;">
+                <label><input type="checkbox" id="toggle-all-ues"> Tout cocher/décocher</label>
                 {{ form.ues }}
             </div>
         </div>
@@ -28,6 +30,7 @@
                 <input type="checkbox" id="toggle-ressources"> Ressources
             </label>
             <div id="ressources" class="category-content" style="display: none;">
+                <label><input type="checkbox" id="toggle-all-ressources"> Tout cocher/décocher</label>
                 {{ form.ressources }}
             </div>
         </div>
@@ -36,6 +39,7 @@
                 <input type="checkbox" id="toggle-enseignants"> Enseignants
             </label>
             <div id="enseignants" class="category-content" style="display: none;">
+                <label><input type="checkbox" id="toggle-all-enseignants"> Tout cocher/décocher</label>
                 {{ form.enseignants }}
             </div>
         </div>
@@ -44,6 +48,7 @@
                 <input type="checkbox" id="toggle-examens"> Examens
             </label>
             <div id="examens" class="category-content" style="display: none;">
+                <label><input type="checkbox" id="toggle-all-examens"> Tout cocher/décocher</label>
                 {{ form.examens }}
             </div>
         </div>
@@ -52,6 +57,7 @@
                 <input type="checkbox" id="toggle-notes"> Notes
             </label>
             <div id="notes" class="category-content" style="display: none;">
+                <label><input type="checkbox" id="toggle-all-notes"> Tout cocher/décocher</label>
                 {{ form.notes }}
             </div>
         </div>
@@ -88,6 +94,36 @@
         });
         document.getElementById('toggle-notes').addEventListener('change', function() {
             document.getElementById('notes').style.display = this.checked ? 'block' : 'none';
+        });
+
+        document.getElementById('toggle-all-etudiants').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('#etudiants input[type="checkbox"]');
+            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+        });
+
+        document.getElementById('toggle-all-ues').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('#ues input[type="checkbox"]');
+            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+        });
+
+        document.getElementById('toggle-all-ressources').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('#ressources input[type="checkbox"]');
+            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+        });
+
+        document.getElementById('toggle-all-enseignants').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('#enseignants input[type="checkbox"]');
+            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+        });
+
+        document.getElementById('toggle-all-examens').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('#examens input[type="checkbox"]');
+            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+        });
+
+        document.getElementById('toggle-all-notes').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('#notes input[type="checkbox"]');
+            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
         });
     </script>
 
