@@ -60,9 +60,6 @@ urlpatterns = [
     path('notes/<int:pk>/edit/', views.note_update, name='note_update'),
     path('notes/<int:pk>/delete/', views.note_delete, name='note_delete'),
 
-    # URL for file upload
-    path('upload/', views.upload_file, name='upload_file'),
-
     # URL for data export
     path('export/', views.export_data, name='export_data'),
 
