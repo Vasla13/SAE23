@@ -365,7 +365,7 @@ def sae_create(request):
     if request.method == 'POST':
         form = SAEForm(request.POST)
         formset = SaeUEFormSet(request.POST)
-        if form.is_valid():
+        if form.is_valid() and formset.is_valid():
             sae = form.save()
             formset.instance = sae
             formset.save()
@@ -377,8 +377,8 @@ def sae_create(request):
         formset = SaeUEFormSet()
     return render(request, 'main/sae_form.html', {'form': form, 'formset': formset})
 
-def sae_update(request, sae_id):
-    sae = get_object_or_404(SAE, id=sae_id)
+def sae_update(request, pk):
+    sae = get_object_or_404(SAE, pk=pk)
     if request.method == 'POST':
         form = SAEForm(request.POST, instance=sae)
         formset = SaeUEFormSet(request.POST, instance=sae)
