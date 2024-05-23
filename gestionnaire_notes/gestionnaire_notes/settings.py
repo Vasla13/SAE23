@@ -81,7 +81,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'gestionnaire_notes',
         'USER': 'gestionnaire_user',
-        'PASSWORD': 'password',
+        'PASSWORD': 'toto',
         'HOST': 'localhost',
         'PORT': '',
     }
