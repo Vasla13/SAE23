@@ -134,7 +134,7 @@ def export_data(request):
                 writer.writerow(['Examens'])
                 writer.writerow(['ID', 'Titre', 'N°professeurs', 'Code Ressource','Date', 'Coefficient'])
                 for examen in examens:
-                    writer.writerow([examen.id, examen.titre, examen.enseignants.all.numero_professeur, examen.ressource.code, examen.date, examen.coefficient])
+                    writer.writerow([examen.id, examen.titre, examen.enseignants.all, examen.ressource.code, examen.date, examen.coefficient])
                 writer.writerow([])  # Empty row for spacing
 
             # Exporting Notes
