@@ -6,6 +6,9 @@ import csv
 from django.http import HttpResponse
 from .forms import ExportDataForm
 
+def index(request):
+    return render(request, 'main/index.html')
+
 def import_data(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
