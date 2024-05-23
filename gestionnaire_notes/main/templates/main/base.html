@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Gestionnaire de Notes{% endblock %}</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'main/bootstrap.min.css'%}">
     <style>
         .navbar-nav {
             display: flex;
@@ -37,20 +38,15 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'enseignant_list' %}">Enseignants</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'examen_list' %}">Examens</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'note_list' %}">Notes</a></li>
-<<<<<<< HEAD
                 <li class="nav-item"><a class="nav-link" href="{% url 'export_data' %}">Exporter les Données</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'import_data' %}">Importer les Données</a></li>
-=======
-                <li class="nav-item"><a class="nav-link" href="{% url 'export_data' %}">Exporter Données</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'import_data' %}">Importer Données</a></li>
->>>>>>> origin/V2.1
             </ul>
         </div>
     </nav>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="{% static 'main/jquery-3.2.1.slim.min.js'%}"></script>
+    <script src="{% static 'main/bootstrap.min.js'%}"></script>
+    <script src="{% static 'main/popper.min.js'%}"></script>
    
     <div class="container mt-4">
         {% block content %}
