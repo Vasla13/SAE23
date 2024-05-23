@@ -1,15 +1,186 @@
 from django.shortcuts import render, get_object_or_404, redirect
+<<<<<<< HEAD
 from .models import Etudiant, UE, Ressource, Enseignant, Examen, Note, RessourceUE, Groupe, SAE, SaeUE
 from .forms import EtudiantForm, UEForm, RessourceForm, EnseignantForm, ExamenForm, NoteForm, UploadFileForm, RessourceUEFormSet, GroupeForm, SAEForm, SaeUEFormSet
 from django import forms
 import csv
 from django.http import HttpResponse
 from .forms import ExportDataForm
+=======
+from .models import Etudiant, UE, Ressource, Enseignant, Examen, Note
+from .forms import EtudiantForm, UEForm, RessourceForm, EnseignantForm, ExamenForm, NoteForm, UploadFileForm, ExportDataForm
+from django.http import HttpResponse
+import csv
+
+def import_data(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES['file']
+            decoded_file = file.read().decode('utf-8').splitlines()
+            reader = csv.reader(decoded_file)
+            data = list(reader)
+            
+            etudiants = []
+            ues = []
+            ressources = []
+            enseignants = []
+            examens = []
+            notes = []
+
+            current_category = None
+            for row in data:
+                if not row:
+                    continue
+                if row[0] in ['Étudiants', 'Unités d\'enseignement (UE)', 'Ressources', 'Enseignants', 'Examens', 'Notes']:
+                    current_category = row[0]
+                else:
+                    if current_category == 'Étudiants':
+                        etudiants.append(row)
+                    elif current_category == 'Unités d\'enseignement (UE)':
+                        ues.append(row)
+                    elif current_category == 'Ressources':
+                        ressources.append(row)
+                    elif current_category == 'Enseignants':
+                        enseignants.append(row)
+                    elif current_category == 'Examens':
+                        examens.append(row)
+                    elif current_category == 'Notes':
+                        notes.append(row)
+
+            context = {
+                'etudiants': etudiants,
+                'ues': ues,
+                'ressources': ressources,
+                'enseignants': enseignants,
+                'examens': examens,
+                'notes': notes,
+            }
+            return render(request, 'main/releve_notes.html', context)
+    else:
+        form = UploadFileForm()
+    return render(request, 'main/import.html', {'form': form})
+
+def export_data(request):
+    if request.method == 'POST':
+        form = ExportDataForm(request.POST)
+        if form.is_valid():
+            # Check if any student is selected
+            selected_etudiants = form.cleaned_data['etudiants']
+            if selected_etudiants:
+                # Use the name of the first selected student for the file name
+                etudiant_name = selected_etudiants[0].nom + " " + selected_etudiants[0].prenom
+            else:
+                etudiant_name = "etudiants"
+
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = f'attachment; filename="Releve_de_note_de_{etudiant_name}.csv"'
+            writer = csv.writer(response)
+
+            writer.writerow(['Relevé de Notes'])
+            writer.writerow([])  # Empty row for spacing
+
+            # Exporting Etudiants
+            if 'etudiants' in request.POST:
+                etudiants = form.cleaned_data['etudiants']
+                writer.writerow(['Étudiants'])
+                writer.writerow(['N°étudiant', 'Nom', 'Prénom', 'Groupe', 'Photo', 'Email'])
+                for etudiant in etudiants:
+                    photo_url = request.build_absolute_uri(etudiant.photo.url) if etudiant.photo else ''
+                    writer.writerow([etudiant.numero_etudiant, etudiant.nom, etudiant.prenom, etudiant.groupe, photo_url, etudiant.email])
+                writer.writerow([])  # Empty row for spacing
+
+            # Exporting UEs
+            if 'ues' in request.POST:
+                ues = form.cleaned_data['ues']
+                writer.writerow(['Unités d\'enseignement (UE)'])
+                writer.writerow(['Code', 'Nom', 'Semestre', 'Crédit ECTS'])
+                for ue in ues:
+                    writer.writerow([ue.code, ue.nom, ue.semestre, ue.credit_ects])
+                writer.writerow([])  # Empty row for spacing
+
+            # Exporting Ressources
+            if 'ressources' in request.POST:
+                ressources = form.cleaned_data['ressources']
+                writer.writerow(['Ressources'])
+                writer.writerow(['Code Ressource', 'Nom', 'Descriptif', 'Coefficient'])
+                for ressource in ressources:
+                    writer.writerow([ressource.code_ressource, ressource.nom, ressource.descriptif, ressource.coefficient])
+                writer.writerow([])  # Empty row for spacing
+
+            # Exporting Enseignants
+            if 'enseignants' in request.POST:
+                enseignants = form.cleaned_data['enseignants']
+                writer.writerow(['Enseignants'])
+                writer.writerow(['ID', 'Nom', 'Prénom'])
+                for enseignant in enseignants:
+                    writer.writerow([enseignant.id, enseignant.nom, enseignant.prenom])
+                writer.writerow([])  # Empty row for spacing
+
+            # Exporting Examens
+            if 'examens' in request.POST:
+                examens = form.cleaned_data['examens']
+                writer.writerow(['Examens'])
+                writer.writerow(['ID', 'Titre', 'Date', 'Coefficient'])
+                for examen in examens:
+                    writer.writerow([examen.id, examen.titre, examen.date, examen.coefficient])
+                writer.writerow([])  # Empty row for spacing
+
+            # Exporting Notes
+            if 'notes' in request.POST:
+                notes = form.cleaned_data['notes']
+                writer.writerow(['Notes'])
+                writer.writerow(['Examen', 'Étudiant', 'Note', 'Appréciation'])
+                for note in notes:
+                    writer.writerow([note.examen.id, note.etudiant.id, note.note, note.appreciation])
+                writer.writerow([])  # Empty row for spacing
+
+            return response
+
+    else:
+        form = ExportDataForm()
+    return render(request, 'main/export.html', {'form': form})
+
+def note_create(request):
+    if request.method == 'POST':
+        form = NoteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('note_list')
+    else:
+        form = NoteForm()
+    return render(request, 'main/note_form.html', {'form': form})
+>>>>>>> origin/V2.1
 
 def index(request):
     return render(request, 'main/index.html')
 
+<<<<<<< HEAD
 def import_data(request):
+=======
+def handle_uploaded_file(f):
+    with open('uploaded_file.csv', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+def handle_uploaded_file(f):
+    with open('uploaded_file.csv', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+def process_uploaded_file(file_path):
+    with open(file_path, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        for row in reader:
+            if len(row) != 4:
+                continue  # Ignore invalid rows
+            examen_id, etudiant_id, note, appreciation = row
+            examen = get_object_or_404(Examen, id=examen_id)
+            etudiant = get_object_or_404(Etudiant, id=etudiant_id)
+            Note.objects.create(examen=examen, etudiant=etudiant, note=note, appreciation=appreciation)
+
+def upload_file(request):
+>>>>>>> origin/V2.1
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
@@ -74,6 +245,7 @@ def import_data(request):
         form = UploadFileForm()
     return render(request, 'main/import.html', {'form': form})
 
+<<<<<<< HEAD
 
 def export_data(request):
     if request.method == 'POST':
@@ -225,6 +397,8 @@ def groupe_delete(request, pk):
         return redirect('groupe_list')
     return render(request, 'main/groupe_confirm_delete.html', {'groupe': groupe})
 
+=======
+>>>>>>> origin/V2.1
 # CRUD views for Etudiant
 def etudiant_list(request):
     etudiants = Etudiant.objects.all()
@@ -518,4 +692,5 @@ def grade_report(request, pk):
     etudiant = get_object_or_404(Etudiant, pk=pk)
     notes = Note.objects.filter(etudiant=etudiant)
     return render(request, 'main/grade_report.html', {'etudiant': etudiant, 'notes': notes})
+
 
