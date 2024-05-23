@@ -42,6 +42,22 @@ class RessourceUE(models.Model):
     class Meta:
         unique_together = ('ressource', 'unite_enseignement')
 
+class SAE(models.Model):
+    code = models.CharField(max_length=10)
+    nom = models.CharField(max_length=100)
+    description = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.code} - {self.nom}"
+
+class SaeUE(models.Model):
+    sae = models.ForeignKey(SAE, on_delete=models.CASCADE)
+    unite_enseignement = models.ForeignKey(UE, on_delete=models.CASCADE)
+    coefficient = models.DecimalField(max_digits=5, decimal_places=2)
+
+    class Meta:
+        unique_together = ('sae', 'unite_enseignement')
+
 class Enseignant(models.Model):
     numero_professeur = models.CharField(max_length=8)
     nom = models.CharField(max_length=100)

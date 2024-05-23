@@ -1,14 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Etudiant, UE, Ressource, Enseignant, Examen, Note, RessourceUE, Groupe
-from .forms import EtudiantForm, UEForm, RessourceForm, EnseignantForm, ExamenForm, NoteForm, UploadFileForm, RessourceUEFormSet, GroupeForm
+from .models import Etudiant, UE, Ressource, Enseignant, Examen, Note, RessourceUE, Groupe, SAE, SaeUE
+from .forms import EtudiantForm, UEForm, RessourceForm, EnseignantForm, ExamenForm, NoteForm, UploadFileForm, RessourceUEFormSet, GroupeForm, SAEForm, SaeUEFormSet
 from django import forms
 import csv
 from django.http import HttpResponse
-from .forms import ExportDataForm
-
-from django.http import HttpResponse
-import csv
-from .models import Etudiant, UE, Ressource, Enseignant, Examen, Note
 from .forms import ExportDataForm
 
 def import_data(request):
@@ -26,12 +21,16 @@ def import_data(request):
             enseignants = []
             examens = []
             notes = []
+            groupes = []
+            ressources_ue = []
+            saes = []
+            saes_ue = []
 
             current_category = None
             for row in data:
                 if not row:
                     continue
-                if row[0] in ['Étudiants', 'Unités d\'enseignement (UE)', 'Ressources', 'Enseignants', 'Examens', 'Notes']:
+                if row[0] in ['Étudiants', 'Unités d\'enseignement (UE)', 'Ressources', 'Enseignants', 'Examens', 'Notes', 'Groupes', 'RessourcesUE', 'SAE', 'SaeUE']:
                     current_category = row[0]
                 else:
                     if current_category == 'Étudiants':
@@ -46,6 +45,14 @@ def import_data(request):
                         examens.append(row)
                     elif current_category == 'Notes':
                         notes.append(row)
+                    elif current_category == 'Groupes':
+                        groupes.append(row)
+                    elif current_category == 'RessourcesUE':
+                        ressources_ue.append(row)
+                    elif current_category == 'SAE':
+                        saes.append(row)
+                    elif current_category == 'SaeUE':
+                        saes_ue.append(row)
 
             context = {
                 'etudiants': etudiants,
@@ -54,20 +61,23 @@ def import_data(request):
                 'enseignants': enseignants,
                 'examens': examens,
                 'notes': notes,
+                'groupes': groupes,
+                'ressources_ue': ressources_ue,
+                'saes': saes,
+                'saes_ue': saes_ue,
             }
             return render(request, 'main/releve_notes.html', context)
     else:
         form = UploadFileForm()
     return render(request, 'main/import.html', {'form': form})
 
+
 def export_data(request):
     if request.method == 'POST':
         form = ExportDataForm(request.POST)
         if form.is_valid():
-            # Check if any student is selected
             selected_etudiants = form.cleaned_data['etudiants']
             if selected_etudiants:
-                # Use the name of the first selected student for the file name
                 etudiant_name = selected_etudiants[0].nom + " " + selected_etudiants[0].prenom
             else:
                 etudiant_name = "etudiants"
@@ -75,17 +85,8 @@ def export_data(request):
             response = HttpResponse(content_type='text/csv')
             response['Content-Disposition'] = f'attachment; filename="Releve_de_note_de_{etudiant_name}.csv"'
             writer = csv.writer(response)
-
             writer.writerow(['Relevé de Notes'])
             writer.writerow([])  # Empty row for spacing
-            
-            if 'groupes' in request.POST:
-                ues = form.cleaned_data['ues']
-                writer.writerow(['Groupe'])
-                writer.writerow(['identifiant', 'Nom', 'Crédit ECTS'])
-                for ue in ues:
-                    writer.writerow([ue.code, ue.nom, ue.semestre, ue.credit_ects])
-                writer.writerow([])  # Empty row for spacing
 
             # Exporting Etudiants
             if 'etudiants' in request.POST:
@@ -94,7 +95,7 @@ def export_data(request):
                 writer.writerow(['N°étudiant', 'Nom', 'Prénom', 'Groupe', 'Photo', 'Email'])
                 for etudiant in etudiants:
                     photo_url = request.build_absolute_uri(etudiant.photo.url) if etudiant.photo else ''
-                    writer.writerow([etudiant.numero_etudiant, etudiant.nom, etudiant.prenom, etudiant.groupe, photo_url, etudiant.email])
+                    writer.writerow([etudiant.numero_etudiant, etudiant.nom, etudiant.prenom, etudiant.groupe.identifiant if etudiant.groupe else '', photo_url, etudiant.email])
                 writer.writerow([])  # Empty row for spacing
 
             # Exporting UEs
@@ -103,23 +104,16 @@ def export_data(request):
                 writer.writerow(['Unités d\'enseignement (UE)'])
                 writer.writerow(['Code', 'Nom', 'Crédit ECTS'])
                 for ue in ues:
-                    writer.writerow([ue.code, ue.nom, ue.semestre, ue.credit_ects])
+                    writer.writerow([ue.code, ue.nom, ue.credit_ects])
                 writer.writerow([])  # Empty row for spacing
 
             # Exporting Ressources
             if 'ressources' in request.POST:
                 ressources = form.cleaned_data['ressources']
                 writer.writerow(['Ressources'])
-                writer.writerow(['Code Ressource', 'Nom', 'Descriptif', 'Coefficient'])
+                writer.writerow(['Code Ressource', 'Nom', 'Description'])
                 for ressource in ressources:
-                    writer.writerow([ressource.code_ressource, ressource.nom, ressource.descriptif, ressource.coefficient])
-                writer.writerow([])  # Empty row for spacing
-                
-                ressourceues = form.cleaned_data['ressourceues']
-                writer.writerow(['Ressourceues'])
-                writer.writerow(['Ressource', 'UE', 'Coefficient'])
-                for ressourceue in ressourceues:
-                    writer.writerow([ressourceue.ressource, ressourceue.unite_enseignement, ressourceue.coefficient])
+                    writer.writerow([ressource.code, ressource.nom, ressource.description])
                 writer.writerow([])  # Empty row for spacing
 
             # Exporting Enseignants
@@ -128,7 +122,7 @@ def export_data(request):
                 writer.writerow(['Enseignants'])
                 writer.writerow(['ID', 'Nom', 'Prénom'])
                 for enseignant in enseignants:
-                    writer.writerow([enseignant.id, enseignant.nom, enseignant.prenom])
+                    writer.writerow([enseignant.numero_professeur, enseignant.nom, enseignant.prenom])
                 writer.writerow([])  # Empty row for spacing
 
             # Exporting Examens
@@ -149,53 +143,47 @@ def export_data(request):
                     writer.writerow([note.examen.id, note.etudiant.id, note.note, note.appreciation])
                 writer.writerow([])  # Empty row for spacing
 
+            # Exporting Groupes
+            if 'groupes' in request.POST:
+                groupes = form.cleaned_data['groupes']
+                writer.writerow(['Groupes'])
+                writer.writerow(['Identifiant', 'Email'])
+                for groupe in groupes:
+                    writer.writerow([groupe.identifiant, groupe.email])
+                writer.writerow([])  # Empty row for spacing
+
+            # Exporting RessourceUE
+            if 'ressources_ue' in request.POST:
+                ressources_ue = form.cleaned_data['ressources_ue']
+                writer.writerow(['RessourcesUE'])
+                writer.writerow(['Ressource', 'UE', 'Coefficient'])
+                for ressource_ue in ressources_ue:
+                    writer.writerow([ressource_ue.ressource.code, ressource_ue.unite_enseignement.code, ressource_ue.coefficient])
+                writer.writerow([])  # Empty row for spacing
+
+            # Exporting SAE
+            if 'saes' in request.POST:
+                saes = form.cleaned_data['saes']
+                writer.writerow(['SAE'])
+                writer.writerow(['Code', 'Nom', 'Description'])
+                for sae in saes:
+                    writer.writerow([sae.code, sae.nom, sae.description])
+                writer.writerow([])  # Empty row for spacing
+
+            # Exporting SaeUE
+            if 'saes_ue' in request.POST:
+                saes_ue = form.cleaned_data['saes_ue']
+                writer.writerow(['SaeUE'])
+                writer.writerow(['SAE', 'UE', 'Coefficient'])
+                for sae_ue in saes_ue:
+                    writer.writerow([sae_ue.sae.code, sae_ue.unite_enseignement.code, sae_ue.coefficient])
+                writer.writerow([])  # Empty row for spacing
+
             return response
 
     else:
         form = ExportDataForm()
     return render(request, 'main/export.html', {'form': form})
-
-
-
-def note_create(request):
-    if request.method == 'POST':
-        form = NoteForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('note_list')
-    else:
-        form = NoteForm()
-    return render(request, 'main/note_form.html', {'form': form})
-
-def index(request):
-    return render(request, 'main/index.html')
-
-def handle_uploaded_file(f):
-    with open('uploaded_file.csv', 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
-
-def process_uploaded_file(file_path):
-    with open(file_path, newline='') as csvfile:
-        reader = csv.reader(csvfile, delimiter=',')
-        for row in reader:
-            if len(row) != 4:
-                continue  # Ignore invalid rows
-            examen_id, etudiant_id, note, appreciation = row
-            examen = get_object_or_404(Examen, id=examen_id)
-            etudiant = get_object_or_404(Etudiant, id=etudiant_id)
-            Note.objects.create(examen=examen, etudiant=etudiant, note=note, appreciation=appreciation)
-
-def upload_file(request):
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            handle_uploaded_file(request.FILES['file'])
-            process_uploaded_file('uploaded_file.csv')
-            return HttpResponse('File uploaded and processed successfully')
-    else:
-        form = UploadFileForm()
-    return render(request, 'main/upload.html', {'form': form})
 
 # CRUD views for Groupe
 def groupe_list(request):
@@ -359,6 +347,57 @@ def ressource_delete(request, pk):
         coefficients.delete()
         return redirect('ressource_list')
     return render(request, 'main/ressource_confirm_delete.html', {'ressource': ressource})
+
+# CRUD views for SAE
+def sae_list(request):
+    saes = SAE.objects.all()
+    return render(request, 'main/sae_list.html', {'saes': saes})
+
+def sae_detail(request, sae_id):
+    sae = get_object_or_404(SAE, id=sae_id)
+    coefficients = SaeUE.objects.filter(sae=sae)
+    return render(request, 'main/sae_detail.html', {'sae': sae, 'coefficients': coefficients})
+
+def sae_create(request):
+    if request.method == 'POST':
+        form = SAEForm(request.POST)
+        formset = SaeUEFormSet(request.POST)
+        if form.is_valid():
+            sae = form.save()
+            formset.instance = sae
+            formset.save()
+            if 'save_and_add' in request.POST:
+                return redirect('sae_update', pk=sae.pk)
+            return redirect('sae_detail', pk=sae.pk)
+    else:
+        form = SAEForm()
+        formset = SaeUEFormSet()
+    return render(request, 'main/sae_form.html', {'form': form, 'formset': formset})
+
+def sae_update(request, sae_id):
+    sae = get_object_or_404(SAE, id=sae_id)
+    if request.method == 'POST':
+        form = SAEForm(request.POST, instance=sae)
+        formset = SaeUEFormSet(request.POST, instance=sae)
+        if form.is_valid():
+            form.save()
+            formset.save()
+            if 'save_and_add' in request.POST:
+                return redirect('sae_update', pk=sae.pk)
+            return redirect('sae_detail', sae_id=sae.id)
+    else:
+        form = SAEForm(instance=sae)
+        formset = SaeUEFormSet(instance=sae)
+    return render(request, 'main/sae_form.html', {'form': form, 'formset': formset})
+
+def sae_delete(request, sae_id):
+    sae = get_object_or_404(SAE, id=sae_id)
+    coefficients = SaeUE.objects.filter(sae=sae)
+    if request.method == 'POST':
+        sae.delete()
+        coefficients.delete()
+        return redirect('sae_list')
+    return render(request, 'main/sae_confirm_delete.html', {'sae': sae})
 
 # CRUD views for Enseignant
 def enseignant_list(request):

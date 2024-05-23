@@ -1,0 +1,19 @@
+{% extends "main/base.html" %}
+
+{% block title %}Détails de la SAE{% endblock %}
+
+{% block content %}
+    <h1>R{{ sae.code }}</h1>
+    <p><strong>Nom : </strong>{{ sae.nom }}</p>
+    <p><strong>Description :</strong>{{ sae.description }}</p>
+    <p><strong>Coefficients : </strong></p>
+    <ul>
+    {% for coefficient in coefficients %}
+        <li>{{ coefficient.unite_enseignement.code }}: {{ coefficient.coefficient }}</li>
+    {% endfor %}
+    </ul>
+    <a class="btn btn-secondary mt-3" href="{% url 'sae_update' pk=sae.pk %}">Modifier</a>
+    <form action="{% url 'sae_delete' pk=sae.pk %}" method="post">{% csrf_token %}
+    </form>
+
+{% endblock %}

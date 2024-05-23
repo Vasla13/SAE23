@@ -31,6 +31,13 @@ urlpatterns = [
     path('ressources/new/', views.ressource_create, name='ressource_create'),
     path('ressources/<int:pk>/edit/', views.ressource_update, name='ressource_update'),
     path('ressources/<int:pk>/delete/', views.ressource_delete, name='ressource_delete'),
+    
+    # URLs for SAE
+    path('sae/', views.sae_list, name='sae_list'),
+    path('sae/<int:sae_id>/', views.sae_detail, name='sae_detail'),
+    path('sae/new/', views.sae_create, name='sae_create'),
+    path('sae/<int:sae_id>/edit/', views.sae_update, name='sae_update'),
+    path('sae/<int:sae_id>/delete/', views.sae_delete, name='sae_delete'),
 
     # URLs for Enseignant
     path('enseignants/', views.enseignant_list, name='enseignant_list'),
