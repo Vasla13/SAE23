@@ -17,6 +17,14 @@
         </div>
         <div class="category">
             <label class="category-header">
+                <input type="checkbox" id="toggle-etudiants"> Groupes
+            </label>
+            <div id="groupes" class="category-content" style="display: none;">
+                {{ form.groupes }}
+            </div>
+        </div>
+        <div class="category">
+            <label class="category-header">
                 <input type="checkbox" id="toggle-ues"> Unités d'enseignement (UE)
             </label>
             <div id="ues" class="category-content" style="display: none;">
@@ -29,6 +37,14 @@
             </label>
             <div id="ressources" class="category-content" style="display: none;">
                 {{ form.ressources }}
+            </div>
+        </div>
+        <div class="category">
+            <label class="category-header">
+                <input type="checkbox" id="toggle-etudiants"> SAEs
+            </label>
+            <div id="saes" class="category-content" style="display: none;">
+                {{ form.saes }}
             </div>
         </div>
         <div class="category">
