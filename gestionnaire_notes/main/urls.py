@@ -3,7 +3,6 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-<<<<<<< HEAD
     
     # URLs for Groupe
     path('groups/', views.groupe_list, name='groupe_list'),
@@ -11,8 +10,6 @@ urlpatterns = [
     path('groups/new/', views.groupe_create, name='groupe_create'),
     path('groups/<int:pk>/edit/', views.groupe_update, name='groupe_update'),
     path('groups/<int:pk>/delete/', views.groupe_delete, name='groupe_delete'),
-=======
->>>>>>> origin/V2.1
 
     # URLs for Etudiant
     path('etudiants/', views.etudiant_list, name='etudiant_list'),
