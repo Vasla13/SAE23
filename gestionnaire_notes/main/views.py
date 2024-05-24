@@ -2,12 +2,42 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Etudiant, UE, Ressource, Enseignant, Examen, Note, RessourceUE, Groupe, SAE, SaeUE
 from .forms import EtudiantForm, UEForm, RessourceForm, EnseignantForm, ExamenForm, NoteForm, UploadFileForm, RessourceUEFormSet, GroupeForm, SAEForm, SaeUEFormSet
 from django import forms
-import csv
 from django.http import HttpResponse
 from .forms import ExportDataForm
+from xhtml2pdf import pisa
+import csv
+from django.template.loader import get_template
+from io import BytesIO
 
 def index(request):
     return render(request, 'main/index.html')
+
+
+def render_to_pdf(template_src, context_dict):
+    template = get_template(template_src)
+    html = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+
+def generate_pdf(request, pk):
+    etudiant = get_object_or_404(Etudiant, pk=pk)
+    notes = Note.objects.filter(etudiant=etudiant)
+    
+    context = {
+        'etudiant': etudiant,
+        'notes': notes,
+    }
+    pdf = render_to_pdf('main/grade_report_pdf.html', context)
+    if pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = f"Releve_de_note_{etudiant.nom}_{etudiant.prenom}.pdf"
+        content = f"inline; filename={filename}"
+        response['Content-Disposition'] = content
+        return response
+    return redirect('etudiant_detail', pk=pk)
 
 def import_data(request):
     if request.method == 'POST':
@@ -209,6 +239,24 @@ def groupe_create(request):
 
 def groupe_update(request, pk):
     groupe = get_object_or_404(Groupe, pk=pk)
+
+def handle_uploaded_file(f):
+    with open('uploaded_file.csv', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+def process_uploaded_file(file_path):
+    with open(file_path, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        for row in reader:
+            if len(row) != 4:
+                continue  # Ignore invalid rows
+            examen_id, etudiant_id, note, appreciation = row
+            examen = get_object_or_404(Examen, id=examen_id)
+            etudiant = get_object_or_404(Etudiant, id=etudiant_id)
+            Note.objects.create(examen=examen, etudiant=etudiant, note=note, appreciation=appreciation)
+
+def upload_file(request):
     if request.method == 'POST':
         form = GroupeForm(request.POST, request.FILES, instance=groupe)
         if form.is_valid():
@@ -518,5 +566,3 @@ def grade_report(request, pk):
     etudiant = get_object_or_404(Etudiant, pk=pk)
     notes = Note.objects.filter(etudiant=etudiant)
     return render(request, 'main/grade_report.html', {'etudiant': etudiant, 'notes': notes})
-
-

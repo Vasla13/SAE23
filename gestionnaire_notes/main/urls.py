@@ -68,4 +68,5 @@ urlpatterns = [
 
     # URL for grade report
     path('grade_report/<int:pk>/', views.grade_report, name='grade_report'),
+    path('etudiants/<int:pk>/pdf/', views.generate_pdf, name='generate_pdf'),
 ]
