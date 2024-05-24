@@ -3,31 +3,37 @@
 {% block title %}Détail de l'Étudiant{% endblock %}
 
 {% block content %}
-<h2>Détail de l'Étudiant</h2>
-<p><strong>Nom:</strong> {{ etudiant.nom }}</p>
-<p><strong>Prénom:</strong> {{ etudiant.prenom }}</p>
-<p><strong>Groupe:</strong> {{ etudiant.groupe }}</p>
-<p><strong>Email:</strong> {{ etudiant.email }}</p>
+    <h1>{{ etudiant.nom }} {{ etudiant.prenom }}</h1>
+    <p><strong>N° Étudiant :</strong> e{{ etudiant.numero_etudiant }}</p>
+    <p><strong>Groupe :</strong> {{ etudiant.groupe }}</p>
+    <p><strong>Email :</strong> <a href="mailto:{{ etudiant.email }}">{{ etudiant.email }}</a></p>
+    {% if etudiant.photo %}
+        <img src="{{ etudiant.photo.url }}" alt="Photo de {{ etudiant.nom }}" class="img-fluid", height="128", width="128">
+        <p></p>
+    {% else %}
+        <p>Aucune photo disponible</p>
+    {% endif %}
+    <a href="{% url 'etudiant_update' etudiant.pk %}" class="btn btn-secondary mt-3">Modifier</a>
 
-<h3>Notes</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Examen</th>
-            <th>Note</th>
-            <th>Appréciation</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for note in notes %}
-        <tr>
-            <td>{{ note.examen.titre }}</td>
-            <td>{{ note.note }}</td>
-            <td>{{ note.appreciation }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <h3>Notes</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Examen</th>
+                <th>Note</th>
+                <th>Appréciation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for note in notes %}
+            <tr>
+                <td>{{ note.examen.titre }}</td>
+                <td>{{ note.note }}</td>
+                <td>{{ note.appreciation }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-<a href="{% url 'generate_pdf' etudiant.pk %}" class="btn btn-primary">Télécharger le Relevé de Notes en PDF</a>
+    <a href="{% url 'generate_pdf' etudiant.pk %}" class="btn btn-primary">Télécharger le Relevé de Notes en PDF</a>
 {% endblock %}

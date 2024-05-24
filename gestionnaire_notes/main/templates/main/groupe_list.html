@@ -1,0 +1,19 @@
+{% extends "main/base.html" %}
+
+{% block title %}Liste des Groupes{% endblock %}
+
+{% block content %}
+    <h1>Liste des Groupes</h1>
+    <a href="{% url 'groupe_create' %}" class="btn btn-primary mb-2">Ajouter un Groupe</a>
+    <ul class="list-group">
+        {% for groupe in groupes %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a href="{% url 'groupe_detail' groupe.pk %}">{{ groupe.identifiant }}</a>
+                <div>
+                    <a href="{% url 'groupe_update' groupe.pk %}" class="btn btn-secondary btn-sm">Modifier</a>
+                    <a href="{% url 'groupe_delete' groupe.pk %}" class="btn btn-danger btn-sm">Supprimer</a>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

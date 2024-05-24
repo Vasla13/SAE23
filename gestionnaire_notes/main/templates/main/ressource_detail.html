@@ -3,9 +3,17 @@
 {% block title %}Détails de la Ressource{% endblock %}
 
 {% block content %}
-    <h1>{{ ressource.nom }}</h1>
-    <p><strong>Code :</strong> {{ ressource.code_ressource }}</p>
-    <p><strong>Descriptif :</strong> {{ ressource.descriptif }}</p>
-    <p><strong>Coefficient :</strong> {{ ressource.coefficient }}</p>
-    <a href="{% url 'ressource_update' ressource.pk %}" class="btn btn-secondary mt-3">Modifier</a>
+    <h1>R{{ ressource.code }}</h1>
+    <p><strong>Nom : </strong>{{ ressource.nom }}</p>
+    <p><strong>Description :</strong>{{ ressource.description }}</p>
+    <p><strong>Coefficients : </strong></p>
+    <ul>
+    {% for coefficient in coefficients %}
+        <li>{{ coefficient.unite_enseignement.code }}: {{ coefficient.coefficient }}</li>
+    {% endfor %}
+    </ul>
+    <a class="btn btn-secondary mt-3" href="{% url 'ressource_update' pk=ressource.pk %}">Modifier</a>
+    <form action="{% url 'ressource_delete' pk=ressource.pk %}" method="post">{% csrf_token %}
+    </form>
+
 {% endblock %}

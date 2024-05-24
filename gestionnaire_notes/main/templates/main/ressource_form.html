@@ -3,10 +3,17 @@
 {% block title %}Ajouter/Modifier Ressource{% endblock %}
 
 {% block content %}
-    <h2>{% if form.instance.pk %}Modifier Ressource{% else %}Ajouter Ressource{% endif %}</h2>
-    <form method="post">
-        {% csrf_token %}
+    <h1>Nouvelle Ressource</h1>
+    <form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    {{ formset.management_form }}
+    <section id="ue_field">
+    {% for form in formset %}
+        <p>---------------------------</p>
         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">{% if form.instance.pk %}Modifier{% else %}Ajouter{% endif %}</button>
+    {% endfor %}
+    </section>
+        <button type="submit" name="save" class="btn btn-primary">{% if form.instance.pk %}Modifier{% else %}Ajouter{% endif %}</button>
+        <button type="submit" name="save_and_add" class="btn btn-secondary mt">Ajouter une UE</button>
     </form>
 {% endblock %}

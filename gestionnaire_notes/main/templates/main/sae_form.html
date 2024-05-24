@@ -1,0 +1,19 @@
+{% extends "main/base.html" %}
+
+{% block title %}Ajouter/Modifier SAE{% endblock %}
+
+{% block content %}
+    <h1>Nouvelle SAE</h1>
+    <form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    {{ formset.management_form }}
+    <section id="ue_field">
+    {% for form in formset %}
+        <p>---------------------------</p>
+        {{ form.as_p }}
+    {% endfor %}
+    </section>
+        <button type="submit" name="save" class="btn btn-primary">{% if form.instance.pk %}Modifier{% else %}Ajouter{% endif %}</button>
+        <button type="submit" name="save_and_add" class="btn btn-secondary mt">Ajouter une UE</button>
+    </form>
+{% endblock %}

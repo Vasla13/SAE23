@@ -1,0 +1,9 @@
+{% extends "main/base.html" %}
+
+{% block title %}Détails du Groupe{% endblock %}
+
+{% block content %}
+    <h1>{{ groupe.identifiant }}</h1>
+    <p><strong>Email :</strong> {% if groupe.email is None %}{{ groupe.email }}{% else %}<a href="mailto:{{ groupe.email }}">{{ groupe.email }}</a>{% endif%}</p>
+    <a href="{% url 'groupe_update' groupe.pk %}" class="btn btn-secondary mt-3">Modifier</a>
+{% endblock %}

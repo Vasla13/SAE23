@@ -3,7 +3,9 @@
 {% block title %}Détails de la Note{% endblock %}
 
 {% block content %}
-    <h1>Note pour {{ note.etudiant.nom }} - {{ note.examen.titre }}</h1>
+    <h1>{{ note }}</h1>
+    <p><strong>Examen :</strong> {{ note.examen }}</p>
+    <p><strong>Etudiant :</strong> {{ note.etudiant }}</p>
     <p><strong>Note :</strong> {{ note.note }}</p>
     <p><strong>Appréciation :</strong> {{ note.appreciation }}</p>
     <a href="{% url 'note_update' note.pk %}" class="btn btn-secondary mt-3">Modifier</a>

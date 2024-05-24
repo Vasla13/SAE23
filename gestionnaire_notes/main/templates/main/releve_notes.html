@@ -8,6 +8,8 @@
     {% if etudiants %}
         <h3>Étudiants</h3>
         <table class="table table-striped">
+            <thead>
+            </thead>
             <tbody>
                 {% for etudiant in etudiants %}
                     <tr>
@@ -23,6 +25,8 @@
     {% if ues %}
         <h3>Unités d'enseignement (UE)</h3>
         <table class="table table-striped">
+            <thead>
+            </thead>
             <tbody>
                 {% for ue in ues %}
                     <tr>
@@ -38,6 +42,8 @@
     {% if ressources %}
         <h3>Ressources</h3>
         <table class="table table-striped">
+            <thead>
+            </thead>
             <tbody>
                 {% for ressource in ressources %}
                     <tr>
@@ -53,6 +59,8 @@
     {% if enseignants %}
         <h3>Enseignants</h3>
         <table class="table table-striped">
+            <thead>
+            </thead>
             <tbody>
                 {% for enseignant in enseignants %}
                     <tr>
@@ -64,10 +72,11 @@
             </tbody>
         </table>
     {% endif %}
-
     {% if examens %}
         <h3>Examens</h3>
         <table class="table table-striped">
+            <thead>
+            </thead>
             <tbody>
                 {% for examen in examens %}
                     <tr>
@@ -83,6 +92,8 @@
     {% if notes %}
         <h3>Notes</h3>
         <table class="table table-striped">
+            <thead>
+            </thead>
             <tbody>
                 {% for note in notes %}
                     <tr>

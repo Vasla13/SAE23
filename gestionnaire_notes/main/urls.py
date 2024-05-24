@@ -3,6 +3,13 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
+    
+    # URLs for Groupe
+    path('groups/', views.groupe_list, name='groupe_list'),
+    path('groups/<int:pk>/', views.groupe_detail, name='groupe_detail'),
+    path('groups/new/', views.groupe_create, name='groupe_create'),
+    path('groups/<int:pk>/edit/', views.groupe_update, name='groupe_update'),
+    path('groups/<int:pk>/delete/', views.groupe_delete, name='groupe_delete'),
 
     # URLs for Etudiant
     path('etudiants/', views.etudiant_list, name='etudiant_list'),
@@ -24,6 +31,13 @@ urlpatterns = [
     path('ressources/new/', views.ressource_create, name='ressource_create'),
     path('ressources/<int:pk>/edit/', views.ressource_update, name='ressource_update'),
     path('ressources/<int:pk>/delete/', views.ressource_delete, name='ressource_delete'),
+    
+    # URLs for SAE
+    path('sae/', views.sae_list, name='sae_list'),
+    path('sae/<int:sae_id>/', views.sae_detail, name='sae_detail'),
+    path('sae/new/', views.sae_create, name='sae_create'),
+    path('sae/<int:pk>/edit/', views.sae_update, name='sae_update'),
+    path('sae/<int:sae_id>/delete/', views.sae_delete, name='sae_delete'),
 
     # URLs for Enseignant
     path('enseignants/', views.enseignant_list, name='enseignant_list'),
@@ -45,9 +59,6 @@ urlpatterns = [
     path('notes/new/', views.note_create, name='note_create'),
     path('notes/<int:pk>/edit/', views.note_update, name='note_update'),
     path('notes/<int:pk>/delete/', views.note_delete, name='note_delete'),
-
-    # URL for file upload
-    path('upload/', views.upload_file, name='upload_file'),
 
     # URL for data export
     path('export/', views.export_data, name='export_data'),

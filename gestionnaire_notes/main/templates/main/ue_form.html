@@ -3,7 +3,7 @@
 {% block title %}Ajouter/Modifier UE{% endblock %}
 
 {% block content %}
-    <h2>{% if form.instance.pk %}Modifier UE{% else %}Ajouter UE{% endif %}</h2>
+    <h2>{% if form.instance.pk %}Modifier une UE{% else %}Ajouter une UE{% endif %}</h2>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}

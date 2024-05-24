@@ -18,6 +18,15 @@
         </div>
         <div class="category">
             <label class="category-header">
+                <input type="checkbox" id="toggle-groupes"> Groupes
+            </label>
+            <div id="groupes" class="category-content" style="display: none;">
+                <label><input type="checkbox" id="toggle-all-groupes"> Tout cocher/décocher</label>
+                {{ form.groupes }}
+            </div>
+        </div>
+        <div class="category">
+            <label class="category-header">
                 <input type="checkbox" id="toggle-ues"> Unités d'enseignement (UE)
             </label>
             <div id="ues" class="category-content" style="display: none;">
@@ -32,6 +41,15 @@
             <div id="ressources" class="category-content" style="display: none;">
                 <label><input type="checkbox" id="toggle-all-ressources"> Tout cocher/décocher</label>
                 {{ form.ressources }}
+            </div>
+        </div>
+        <div class="category">
+            <label class="category-header">
+                <input type="checkbox" id="toggle-saes"> SAEs
+            </label>
+            <div id="saes" class="category-content" style="display: none;">
+                <label><input type="checkbox" id="toggle-all-saes"> Tout cocher/décocher</label>
+                {{ form.saes }}
             </div>
         </div>
         <div class="category">
@@ -86,8 +104,10 @@
         };
 
         toggleCategoryCheckbox('toggle-etudiants', 'etudiants');
+        toggleCategoryCheckbox('toggle-groupes', 'groupes');
         toggleCategoryCheckbox('toggle-ues', 'ues');
         toggleCategoryCheckbox('toggle-ressources', 'ressources');
+        toggleCategoryCheckbox('toggle-saes', 'saes');
         toggleCategoryCheckbox('toggle-enseignants', 'enseignants');
         toggleCategoryCheckbox('toggle-examens', 'examens');
         toggleCategoryCheckbox('toggle-notes', 'notes');
@@ -101,8 +121,10 @@
         };
 
         toggleAllCategoryCheckboxes('toggle-all-etudiants', 'etudiants');
+        toggleAllCategoryCheckboxes('toggle-all-groupes', 'groupes');
         toggleAllCategoryCheckboxes('toggle-all-ues', 'ues');
         toggleAllCategoryCheckboxes('toggle-all-ressources', 'ressources');
+        toggleAllCategoryCheckboxes('toggle-all-saes', 'saes');
         toggleAllCategoryCheckboxes('toggle-all-enseignants', 'enseignants');
         toggleAllCategoryCheckboxes('toggle-all-examens', 'examens');
         toggleAllCategoryCheckboxes('toggle-all-notes', 'notes');

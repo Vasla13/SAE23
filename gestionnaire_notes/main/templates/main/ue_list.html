@@ -8,7 +8,7 @@
     <ul class="list-group">
         {% for ue in ues %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
-                <a href="{% url 'ue_detail' ue.pk %}">{{ ue.nom }}</a>
+                <a href="{% url 'ue_detail' ue.pk %}">{{ ue.code }}</a>
                 <div>
                     <a href="{% url 'ue_update' ue.pk %}" class="btn btn-secondary btn-sm">Modifier</a>
                     <a href="{% url 'ue_delete' ue.pk %}" class="btn btn-danger btn-sm">Supprimer</a>
