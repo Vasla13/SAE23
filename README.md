@@ -6,3 +6,6 @@ source myenv/bin/activate  # Pour macOS et Linux
 pip install django
 
 pip install Pillow
+
+pip install xhtml2pdf
+
