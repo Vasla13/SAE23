@@ -404,8 +404,8 @@ def sae_list(request):
     saes = SAE.objects.all()
     return render(request, 'main/sae_list.html', {'saes': saes})
 
-def sae_detail(request, sae_id):
-    sae = get_object_or_404(SAE, id=sae_id)
+def sae_detail(request, pk):
+    sae = get_object_or_404(SAE, pk=pk)
     coefficients = SaeUE.objects.filter(sae=sae)
     return render(request, 'main/sae_detail.html', {'sae': sae, 'coefficients': coefficients})
 
