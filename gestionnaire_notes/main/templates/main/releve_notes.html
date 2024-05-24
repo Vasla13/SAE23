@@ -9,14 +9,6 @@
         <h3>Étudiants</h3>
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th>N°étudiant</th>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Groupe</th>
-                    <th>Photo</th>
-                    <th>Email</th>
-                </tr>
             </thead>
             <tbody>
                 {% for etudiant in etudiants %}
@@ -34,12 +26,6 @@
         <h3>Unités d'enseignement (UE)</h3>
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th>Code</th>
-                    <th>Nom</th>
-                    <th>Semestre</th>
-                    <th>Crédit ECTS</th>
-                </tr>
             </thead>
             <tbody>
                 {% for ue in ues %}
@@ -57,12 +43,6 @@
         <h3>Ressources</h3>
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th>Code Ressource</th>
-                    <th>Nom</th>
-                    <th>Descriptif</th>
-                    <th>Coefficient</th>
-                </tr>
             </thead>
             <tbody>
                 {% for ressource in ressources %}
@@ -80,11 +60,6 @@
         <h3>Enseignants</h3>
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                </tr>
             </thead>
             <tbody>
                 {% for enseignant in enseignants %}
@@ -97,17 +72,10 @@
             </tbody>
         </table>
     {% endif %}
-
     {% if examens %}
         <h3>Examens</h3>
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Titre</th>
-                    <th>Date</th>
-                    <th>Coefficient</th>
-                </tr>
             </thead>
             <tbody>
                 {% for examen in examens %}
@@ -125,12 +93,6 @@
         <h3>Notes</h3>
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th>Examen</th>
-                    <th>Étudiant</th>
-                    <th>Note</th>
-                    <th>Appréciation</th>
-                </tr>
             </thead>
             <tbody>
                 {% for note in notes %}

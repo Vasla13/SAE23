@@ -12,7 +12,17 @@
                 <input type="checkbox" id="toggle-etudiants"> Étudiants
             </label>
             <div id="etudiants" class="category-content" style="display: none;">
+                <label><input type="checkbox" id="toggle-all-etudiants"> Tout cocher/décocher</label>
                 {{ form.etudiants }}
+            </div>
+        </div>
+        <div class="category">
+            <label class="category-header">
+                <input type="checkbox" id="toggle-groupes"> Groupes
+            </label>
+            <div id="groupes" class="category-content" style="display: none;">
+                <label><input type="checkbox" id="toggle-all-groupes"> Tout cocher/décocher</label>
+                {{ form.groupes }}
             </div>
         </div>
         <div class="category">
@@ -20,6 +30,7 @@
                 <input type="checkbox" id="toggle-ues"> Unités d'enseignement (UE)
             </label>
             <div id="ues" class="category-content" style="display: none;">
+                <label><input type="checkbox" id="toggle-all-ues"> Tout cocher/décocher</label>
                 {{ form.ues }}
             </div>
         </div>
@@ -28,7 +39,17 @@
                 <input type="checkbox" id="toggle-ressources"> Ressources
             </label>
             <div id="ressources" class="category-content" style="display: none;">
+                <label><input type="checkbox" id="toggle-all-ressources"> Tout cocher/décocher</label>
                 {{ form.ressources }}
+            </div>
+        </div>
+        <div class="category">
+            <label class="category-header">
+                <input type="checkbox" id="toggle-saes"> SAEs
+            </label>
+            <div id="saes" class="category-content" style="display: none;">
+                <label><input type="checkbox" id="toggle-all-saes"> Tout cocher/décocher</label>
+                {{ form.saes }}
             </div>
         </div>
         <div class="category">
@@ -36,6 +57,7 @@
                 <input type="checkbox" id="toggle-enseignants"> Enseignants
             </label>
             <div id="enseignants" class="category-content" style="display: none;">
+                <label><input type="checkbox" id="toggle-all-enseignants"> Tout cocher/décocher</label>
                 {{ form.enseignants }}
             </div>
         </div>
@@ -44,6 +66,7 @@
                 <input type="checkbox" id="toggle-examens"> Examens
             </label>
             <div id="examens" class="category-content" style="display: none;">
+                <label><input type="checkbox" id="toggle-all-examens"> Tout cocher/décocher</label>
                 {{ form.examens }}
             </div>
         </div>
@@ -52,6 +75,7 @@
                 <input type="checkbox" id="toggle-notes"> Notes
             </label>
             <div id="notes" class="category-content" style="display: none;">
+                <label><input type="checkbox" id="toggle-all-notes"> Tout cocher/décocher</label>
                 {{ form.notes }}
             </div>
         </div>
@@ -59,36 +83,51 @@
     </form>
 
     <script>
+        // Toggle all checkboxes
         document.getElementById('toggle-all').addEventListener('click', function() {
             const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = !allChecked;
-                if (checkbox.id.startsWith('toggle-')) {
-                    const contentId = checkbox.id.replace('toggle-', '');
-                    document.getElementById(contentId).style.display = checkbox.checked ? 'block' : 'none';
-                }
+            const allChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+            checkboxes.forEach(checkbox => checkbox.checked = !allChecked);
+
+            document.querySelectorAll('.category-content').forEach(content => {
+                content.style.display = !allChecked ? 'block' : 'none';
             });
         });
 
-        document.getElementById('toggle-etudiants').addEventListener('change', function() {
-            document.getElementById('etudiants').style.display = this.checked ? 'block' : 'none';
-        });
-        document.getElementById('toggle-ues').addEventListener('change', function() {
-            document.getElementById('ues').style.display = this.checked ? 'block' : 'none';
-        });
-        document.getElementById('toggle-ressources').addEventListener('change', function() {
-            document.getElementById('ressources').style.display = this.checked ? 'block' : 'none';
-        });
-        document.getElementById('toggle-enseignants').addEventListener('change', function() {
-            document.getElementById('enseignants').style.display = this.checked ? 'block' : 'none';
-        });
-        document.getElementById('toggle-examens').addEventListener('change', function() {
-            document.getElementById('examens').style.display = this.checked ? 'block' : 'none';
-        });
-        document.getElementById('toggle-notes').addEventListener('change', function() {
-            document.getElementById('notes').style.display = this.checked ? 'block' : 'none';
-        });
+        // Toggle category checkboxes
+        const toggleCategoryCheckbox = (categoryId, contentId) => {
+            document.getElementById(categoryId).addEventListener('change', function() {
+                document.getElementById(contentId).style.display = this.checked ? 'block' : 'none';
+                const checkboxes = document.querySelectorAll(`#${contentId} input[type="checkbox"]`);
+                checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+            });
+        };
+
+        toggleCategoryCheckbox('toggle-etudiants', 'etudiants');
+        toggleCategoryCheckbox('toggle-groupes', 'groupes');
+        toggleCategoryCheckbox('toggle-ues', 'ues');
+        toggleCategoryCheckbox('toggle-ressources', 'ressources');
+        toggleCategoryCheckbox('toggle-saes', 'saes');
+        toggleCategoryCheckbox('toggle-enseignants', 'enseignants');
+        toggleCategoryCheckbox('toggle-examens', 'examens');
+        toggleCategoryCheckbox('toggle-notes', 'notes');
+
+        // Toggle all checkboxes within a category
+        const toggleAllCategoryCheckboxes = (toggleAllId, contentId) => {
+            document.getElementById(toggleAllId).addEventListener('change', function() {
+                const checkboxes = document.querySelectorAll(`#${contentId} input[type="checkbox"]`);
+                checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+            });
+        };
+
+        toggleAllCategoryCheckboxes('toggle-all-etudiants', 'etudiants');
+        toggleAllCategoryCheckboxes('toggle-all-groupes', 'groupes');
+        toggleAllCategoryCheckboxes('toggle-all-ues', 'ues');
+        toggleAllCategoryCheckboxes('toggle-all-ressources', 'ressources');
+        toggleAllCategoryCheckboxes('toggle-all-saes', 'saes');
+        toggleAllCategoryCheckboxes('toggle-all-enseignants', 'enseignants');
+        toggleAllCategoryCheckboxes('toggle-all-examens', 'examens');
+        toggleAllCategoryCheckboxes('toggle-all-notes', 'notes');
     </script>
 
     <style>

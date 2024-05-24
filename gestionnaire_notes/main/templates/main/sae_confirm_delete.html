@@ -6,7 +6,7 @@
     <h1>Supprimer SAE</h1>
     <p>Êtes-vous sûr de vouloir supprimer {{ sae.nom }} ?</p>
     <form method="post">
-        {% csrf_token %}
+{% csrf_token %}
         <button type="submit" class="btn btn-danger">Supprimer</button>
         <a href="{% url 'sae_list' %}" class="btn btn-secondary">Annuler</a>
     </form>
