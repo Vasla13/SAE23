@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <title>Relevé de Notes</title>
     <style>
         body {
@@ -11,53 +11,66 @@
             text-align: center;
             margin-bottom: 20px;
         }
-        .content {
-            margin: 20px;
+        .student-info, .grades {
+            margin-bottom: 20px;
         }
-        .content h2 {
-            text-align: center;
-            text-decoration: underline;
-        }
-        table {
+        .grades table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
         }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
+        .grades th, .grades td {
+            border: 1px solid #ddd;
             padding: 8px;
-            text-align: left;
+        }
+        .grades th {
+            background-color: #f2f2f2;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>Relevé de Notes</h1>
-        <p>Étudiant: {{ etudiant.nom }} {{ etudiant.prenom }}</p>
-        <p>Email: {{ etudiant.email }}</p>
+        <h1>Université de Haute Alsace</h1>
+        <h2>Département Réseaux et Télécommunications</h2>
+        <h3>Relevé de Notes</h3>
     </div>
-    <div class="content">
-        <h2>Notes</h2>
+    <div class="student-info">
+        <p><strong>Nom:</strong> {{ etudiant.nom }} {{ etudiant.prenom }}</p>
+        <p><strong>Numéro d'étudiant:</strong> {{ etudiant.numero_etudiant }}</p>
+        <p><strong>Groupe:</strong> {{ etudiant.groupe }}</p>
+        <p><strong>Email:</strong> {{ etudiant.email }}</p>
+    </div>
+    <div class="grades">
+        <h3>Notes</h3>
         <table>
             <thead>
                 <tr>
+                    <th>Unité d'enseignement</th>
                     <th>Examen</th>
                     <th>Note</th>
                     <th>Appréciation</th>
+                    <th>Coefficient</th>
                 </tr>
             </thead>
             <tbody>
                 {% for note in notes %}
                 <tr>
+                    <td>{{ note.examen.ressource.ue.nom }}</td>
                     <td>{{ note.examen.titre }}</td>
                     <td>{{ note.note }}</td>
                     <td>{{ note.appreciation }}</td>
+                    <td>{{ note.examen.coefficient }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+    <div class="footer">
+        <p>Le chef de département</p>
+        <p>Arnauld ALBERT</p>
     </div>
 </body>
 </html>

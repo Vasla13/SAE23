@@ -8,7 +8,7 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 import csv
 
-def render_to_pdf(template_src, context_dict={}):
+def render_to_pdf(template_src, context_dict):
     template = get_template(template_src)
     html = template.render(context_dict)
     result = BytesIO()
@@ -20,6 +20,7 @@ def render_to_pdf(template_src, context_dict={}):
 def generate_pdf(request, pk):
     etudiant = get_object_or_404(Etudiant, pk=pk)
     notes = Note.objects.filter(etudiant=etudiant)
+    
     context = {
         'etudiant': etudiant,
         'notes': notes,
@@ -27,10 +28,11 @@ def generate_pdf(request, pk):
     pdf = render_to_pdf('main/grade_report_pdf.html', context)
     if pdf:
         response = HttpResponse(pdf, content_type='application/pdf')
-        content = f"inline; filename=Releve_de_note_de_{etudiant.nom}_{etudiant.prenom}.pdf"
+        filename = f"Releve_de_note_{etudiant.nom}_{etudiant.prenom}.pdf"
+        content = f"inline; filename={filename}"
         response['Content-Disposition'] = content
         return response
-    return HttpResponse("Not Found")
+    return redirect('etudiant_detail', pk=pk)
 
 def import_data(request):
     if request.method == 'POST':
