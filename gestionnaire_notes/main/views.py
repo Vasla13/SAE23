@@ -1,8 +1,36 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Etudiant, UE, Ressource, Enseignant, Examen, Note
 from .forms import EtudiantForm, UEForm, RessourceForm, EnseignantForm, ExamenForm, NoteForm, UploadFileForm, ExportDataForm
+from django import forms
 from django.http import HttpResponse
+from io import BytesIO
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 import csv
+
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+
+def generate_pdf(request, pk):
+    etudiant = get_object_or_404(Etudiant, pk=pk)
+    notes = Note.objects.filter(etudiant=etudiant)
+    context = {
+        'etudiant': etudiant,
+        'notes': notes,
+    }
+    pdf = render_to_pdf('main/grade_report_pdf.html', context)
+    if pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        content = f"inline; filename=Releve_de_note_de_{etudiant.nom}_{etudiant.prenom}.pdf"
+        response['Content-Disposition'] = content
+        return response
+    return HttpResponse("Not Found")
 
 def import_data(request):
     if request.method == 'POST':
@@ -145,11 +173,6 @@ def note_create(request):
 
 def index(request):
     return render(request, 'main/index.html')
-
-def handle_uploaded_file(f):
-    with open('uploaded_file.csv', 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
 
 def handle_uploaded_file(f):
     with open('uploaded_file.csv', 'wb+') as destination:
@@ -405,5 +428,3 @@ def grade_report(request, pk):
     etudiant = get_object_or_404(Etudiant, pk=pk)
     notes = Note.objects.filter(etudiant=etudiant)
     return render(request, 'main/grade_report.html', {'etudiant': etudiant, 'notes': notes})
-
-

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Relevé de Notes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .content {
+            margin: 20px;
+        }
+        .content h2 {
+            text-align: center;
+            text-decoration: underline;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Relevé de Notes</h1>
+        <p>Étudiant: {{ etudiant.nom }} {{ etudiant.prenom }}</p>
+        <p>Email: {{ etudiant.email }}</p>
+    </div>
+    <div class="content">
+        <h2>Notes</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Examen</th>
+                    <th>Note</th>
+                    <th>Appréciation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for note in notes %}
+                <tr>
+                    <td>{{ note.examen.titre }}</td>
+                    <td>{{ note.note }}</td>
+                    <td>{{ note.appreciation }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
