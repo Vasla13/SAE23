@@ -6,35 +6,44 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 20px;
         }
         .header {
             text-align: center;
             margin-bottom: 20px;
         }
-        .student-info, .grades {
+        .header h1, .header h2, .header h3 {
+            margin: 0;
+        }
+        .student-info, .grades, .footer {
             margin-bottom: 20px;
+        }
+        .student-info p, .footer p {
+            margin: 5px 0;
         }
         .grades table {
             width: 100%;
             border-collapse: collapse;
         }
         .grades th, .grades td {
-            border: 1px solid #ddd;
+            border: 1px solid #000;
             padding: 8px;
+            text-align: left;
         }
         .grades th {
             background-color: #f2f2f2;
         }
-        .footer {
-            margin-top: 30px;
-            text-align: center;
+        .grades .section-title {
+            background-color: #ccc;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>Université de Haute Alsace</h1>
-        <h2>Département Réseaux et Télécommunications</h2>
+        <h2>IUT de COLMAR</h2>
+        <h3>Département Réseaux et Télécommunications</h3>
         <h3>Relevé de Notes</h3>
     </div>
     <div class="student-info">
@@ -42,33 +51,39 @@
         <p><strong>Numéro d'étudiant:</strong> {{ etudiant.numero_etudiant }}</p>
         <p><strong>Groupe:</strong> {{ etudiant.groupe }}</p>
         <p><strong>Email:</strong> {{ etudiant.email }}</p>
+        <p><strong>Formation:</strong> BUT semestre 2</p>
+        <p><strong>Année scolaire:</strong> 2023 - 2024</p>
     </div>
     <div class="grades">
-        <h3>Notes</h3>
         <table>
             <thead>
                 <tr>
-                    <th>Unité d'enseignement</th>
+                    <th>Unités d'enseignement</th>
                     <th>Examen</th>
-                    <th>Note</th>
+                    <th>Note/20</th>
                     <th>Appréciation</th>
                     <th>Coefficient</th>
                 </tr>
             </thead>
             <tbody>
-                {% for note in notes %}
+                {% for ue, exams in notes_by_ue.items %}
+                <tr class="section-title">
+                    <td colspan="5">{{ ue.nom }} ({{ ue.code }})</td>
+                </tr>
+                {% for note in exams %}
                 <tr>
-                    <td>{{ note.examen.ressource.ue.nom }}</td>
                     <td>{{ note.examen.titre }}</td>
                     <td>{{ note.note }}</td>
                     <td>{{ note.appreciation }}</td>
                     <td>{{ note.examen.coefficient }}</td>
                 </tr>
                 {% endfor %}
+                {% endfor %}
             </tbody>
         </table>
     </div>
     <div class="footer">
+        <p>Notes proposées à la délibération du jury.</p>
         <p>Le chef de département</p>
         <p>Arnauld ALBERT</p>
     </div>
