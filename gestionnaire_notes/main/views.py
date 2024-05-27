@@ -8,6 +8,7 @@ from xhtml2pdf import pisa
 import csv
 from django.template.loader import get_template
 from io import BytesIO
+from django.utils import timezone
 
 def index(request):
     return render(request, 'main/index.html')
@@ -24,11 +25,15 @@ def render_to_pdf(template_src, context_dict):
 
 def generate_pdf(request, pk):
     etudiant = get_object_or_404(Etudiant, pk=pk)
-    notes = Note.objects.filter(etudiant=etudiant)
-    
+    notes = Note.objects.filter(etudiant=etudiant).select_related('examen', 'examen__ressource')
+    ressources = Ressource.objects.all()
+    ues = UE.objects.all()
+
     context = {
         'etudiant': etudiant,
         'notes': notes,
+        'ressources': ressources,
+        'ues': ues,
     }
     pdf = render_to_pdf('main/grade_report_pdf.html', context)
     if pdf:

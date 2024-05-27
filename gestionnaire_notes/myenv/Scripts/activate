@@ -35,7 +35,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\Eripe\OneDrive\Documents\SAE23-5\gestionnaire_notes\myenv"
+VIRTUAL_ENV="C:\Users\Eripe\OneDrive\Documents\SAE23-7\gestionnaire_notes\myenv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

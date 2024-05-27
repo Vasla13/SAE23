@@ -1,87 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <title>Relevé de Notes</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
         }
-        .header {
+        .header, .footer {
             text-align: center;
             margin-bottom: 20px;
         }
-        .header h1, .header h2, .header h3 {
-            margin: 0;
+        .section-title {
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
         }
-        .student-info, .grades, .footer {
-            margin-bottom: 20px;
-        }
-        .student-info p, .footer p {
-            margin: 5px 0;
-        }
-        .grades table {
+        .table {
             width: 100%;
             border-collapse: collapse;
         }
-        .grades th, .grades td {
-            border: 1px solid #000;
-            padding: 8px;
-            text-align: left;
-        }
-        .grades th {
-            background-color: #f2f2f2;
-        }
-        .grades .section-title {
-            background-color: #ccc;
-            font-weight: bold;
+        .table th, .table td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>Université de Haute Alsace</h1>
-        <h2>IUT de COLMAR</h2>
+        <h2>Université de Haute Alsace</h2>
+        <h3>IUT de COLMAR</h3>
         <h3>Département Réseaux et Télécommunications</h3>
-        <h3>Relevé de Notes</h3>
+        <h4>RELEVÉ DE NOTES</h4>
+        <p>M. {{ etudiant.nom }} {{ etudiant.prenom }}</p>
+        <p>Formation: BUT semestre 2</p>
+        <p>Année scolaire: 2023 - 2024</p>
     </div>
-    <div class="student-info">
-        <p><strong>Nom:</strong> {{ etudiant.nom }} {{ etudiant.prenom }}</p>
-        <p><strong>Numéro d'étudiant:</strong> {{ etudiant.numero_etudiant }}</p>
-        <p><strong>Groupe:</strong> {{ etudiant.groupe }}</p>
-        <p><strong>Email:</strong> {{ etudiant.email }}</p>
-        <p><strong>Formation:</strong> BUT semestre 2</p>
-        <p><strong>Année scolaire:</strong> 2023 - 2024</p>
-    </div>
-    <div class="grades">
-        <table>
+    
+    <div>
+        <h5 class="section-title">Unités d'enseignement</h5>
+        <table class="table">
             <thead>
                 <tr>
                     <th>Unités d'enseignement</th>
-                    <th>Examen</th>
+                    <th>Coef.</th>
                     <th>Note/20</th>
-                    <th>Appréciation</th>
-                    <th>Coefficient</th>
                 </tr>
             </thead>
             <tbody>
-                {% for ue, exams in notes_by_ue.items %}
-                <tr class="section-title">
-                    <td colspan="5">{{ ue.nom }} ({{ ue.code }})</td>
-                </tr>
-                {% for note in exams %}
+                {% for ue in ues %}
                 <tr>
-                    <td>{{ note.examen.titre }}</td>
-                    <td>{{ note.note }}</td>
-                    <td>{{ note.appreciation }}</td>
-                    <td>{{ note.examen.coefficient }}</td>
+                    <td>{{ ue.nom }}</td>
+                    <td>{{ ue.coefficient }}</td>
+                    <td>
+                        {% for note in notes %}
+                            {% if note.examen.ressource.unite_enseignement == ue %}
+                                {{ note.note }}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
                 </tr>
-                {% endfor %}
                 {% endfor %}
             </tbody>
         </table>
     </div>
+    
+    <div>
+        <h5 class="section-title">Ressources</h5>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Ressource</th>
+                    <th>Coef.</th>
+                    <th>Note/20</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ressource in ressources %}
+                <tr>
+                    <td>{{ ressource.nom }}</td>
+                    <td>{{ ressource.coefficient }}</td>
+                    <td>
+                        {% for note in notes %}
+                            {% if note.examen.ressource == ressource %}
+                                {{ note.note }}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
     <div class="footer">
         <p>Notes proposées à la délibération du jury.</p>
         <p>Le chef de département</p>
