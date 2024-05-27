@@ -16,7 +16,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -27,7 +26,6 @@ SECRET_KEY = 'django-insecure-nl#t!vnl1a)o&#m18^2bdrxjb5hq!57^)@@0hxlc2&)j0vlyw!
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -56,7 +54,7 @@ ROOT_URLCONF = 'gestionnaire_notes.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -69,9 +67,7 @@ TEMPLATES = [
     },
 ]
 
-
 WSGI_APPLICATION = 'gestionnaire_notes.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -82,7 +78,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -102,18 +97,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fr-fr'
 
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -128,17 +121,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
-# Paramètres globaux pour les formats de date et heure
+# Global settings for date and time formats
 DATE_INPUT_FORMATS = ['%d/%m/%Y']
 DATETIME_INPUT_FORMATS = ['%d/%m/%Y %H:%M:%S']
 
-# Vous pouvez également définir le format de date de la langue française
-LANGUAGE_CODE = 'fr-fr'
-USE_I18N = True
-USE_L10N = True
-USE_TZ = True
-
-# Format de date
 DATE_FORMAT = 'd/m/Y'
-

@@ -5,7 +5,7 @@ from .models import Etudiant, UE, Ressource, Enseignant, Examen, Note, Ressource
 class EtudiantForm(forms.ModelForm):
     class Meta:
         model = Etudiant
-        fields = ['numero_etudiant','nom', 'prenom', 'groupe', 'photo', 'email']
+        fields = ['numero_etudiant', 'nom', 'prenom', 'groupe', 'photo', 'email']
         
 class GroupeForm(forms.ModelForm):
     class Meta:
@@ -15,7 +15,7 @@ class GroupeForm(forms.ModelForm):
 class UEForm(forms.ModelForm):
     class Meta:
         model = UE
-        fields = ['code', 'nom', 'credit_ects']
+        fields = ['code', 'nom', 'semestre', 'credit_ects']
 
 class RessourceForm(forms.ModelForm):
     class Meta:
@@ -36,14 +36,12 @@ SaeUEFormSet = inlineformset_factory(
 class EnseignantForm(forms.ModelForm):
     class Meta:
         model = Enseignant
-        fields = ['numero_professeur','nom', 'prenom', 'email']
-
+        fields = ['nom', 'prenom', 'email']  # Modification des champs
 
 class ExamenForm(forms.ModelForm):
     class Meta:
         model = Examen
-        fields = ['titre', 'enseignants', 'ressource']
-
+        fields = ['titre', 'enseignants', 'ressource', 'date', 'coefficient']
 
 class NoteForm(forms.ModelForm):
     class Meta:
@@ -52,7 +50,6 @@ class NoteForm(forms.ModelForm):
 
 class UploadFileForm(forms.Form):
     file = forms.FileField(label='Choisir un fichier CSV')
-
 
 class ExportDataForm(forms.Form):
     etudiants = forms.ModelMultipleChoiceField(
@@ -105,4 +102,3 @@ class ExportDataForm(forms.Form):
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-    

@@ -5,8 +5,8 @@ class Groupe(models.Model):
     email = models.EmailField(null=True, blank=True)
 
     def __str__(self):
-        return f'{self.identifiant}'
-    
+        return self.identifiant
+
 class Etudiant(models.Model):
     numero_etudiant = models.CharField(max_length=8)
     nom = models.CharField(max_length=100)
@@ -21,6 +21,7 @@ class Etudiant(models.Model):
 class UE(models.Model):
     code = models.CharField(max_length=16)
     nom = models.CharField(max_length=100)
+    semestre = models.IntegerField(default=1)  # Ajout du semestre avec une valeur par défaut
     credit_ects = models.IntegerField()
 
     def __str__(self):
@@ -33,7 +34,7 @@ class Ressource(models.Model):
 
     def __str__(self):
         return f"{self.code} - {self.nom}"
-    
+
 class RessourceUE(models.Model):
     ressource = models.ForeignKey(Ressource, on_delete=models.CASCADE)
     unite_enseignement = models.ForeignKey(UE, on_delete=models.CASCADE)
@@ -59,7 +60,7 @@ class SaeUE(models.Model):
         unique_together = ('sae', 'unite_enseignement')
 
 class Enseignant(models.Model):
-    numero_professeur = models.CharField(max_length=8)
+    id = models.AutoField(primary_key=True)  # Ajout du champ id
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100)
     email = models.EmailField()
@@ -68,11 +69,12 @@ class Enseignant(models.Model):
         return f'{self.nom} {self.prenom}'
 
 class Examen(models.Model):
+    id = models.AutoField(primary_key=True)  # Ajout du champ id
     titre = models.CharField(max_length=100)
     enseignants = models.ManyToManyField(Enseignant, related_name='examens')
     ressource = models.ForeignKey(Ressource, on_delete=models.CASCADE, null=True)
     date = models.DateField(null=True, blank=True)
-    coefficient = models.FloatField(default='1.0')
+    coefficient = models.FloatField(default=1.0)
 
     def __str__(self):
         noms_enseignants = "_".join([enseignant.nom for enseignant in self.enseignants.all()])
@@ -83,7 +85,7 @@ class Note(models.Model):
     etudiant = models.ForeignKey(Etudiant, on_delete=models.CASCADE)
     note = models.FloatField()
     appreciation = models.TextField(null=True, blank=True)
-    
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['examen', 'etudiant'], name='unique_examen_etudiant')
@@ -91,4 +93,3 @@ class Note(models.Model):
 
     def __str__(self):
         return f"{self.examen} - {self.etudiant.nom}"
-

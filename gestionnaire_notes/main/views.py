@@ -1,18 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Etudiant, UE, Ressource, Enseignant, Examen, Note, RessourceUE, Groupe, SAE, SaeUE
 from .forms import EtudiantForm, UEForm, RessourceForm, EnseignantForm, ExamenForm, NoteForm, UploadFileForm, RessourceUEFormSet, GroupeForm, SAEForm, SaeUEFormSet
-from django import forms
 from django.http import HttpResponse
 from .forms import ExportDataForm
 from xhtml2pdf import pisa
 import csv
 from django.template.loader import get_template
 from io import BytesIO
-from django.utils import timezone
-
-def index(request):
-    return render(request, 'main/index.html')
-
+from django.db.models import Avg, Min, Max
+import datetime
 
 def render_to_pdf(template_src, context_dict):
     template = get_template(template_src)
@@ -23,18 +19,47 @@ def render_to_pdf(template_src, context_dict):
         return HttpResponse(result.getvalue(), content_type='application/pdf')
     return None
 
+def paginate_notes(notes, notes_per_page=10):
+    for i in range(0, len(notes), notes_per_page):
+        yield notes[i:i + notes_per_page]
+
 def generate_pdf(request, pk):
     etudiant = get_object_or_404(Etudiant, pk=pk)
-    notes = Note.objects.filter(etudiant=etudiant).select_related('examen', 'examen__ressource')
-    ressources = Ressource.objects.all()
-    ues = UE.objects.all()
-
+    ues = UE.objects.all()  # Ou filtrez selon les UEs de l'étudiant
+    notes = Note.objects.filter(etudiant=etudiant)
+    
+    # Regrouper les notes par UE
+    ue_data = []
+    for ue in ues:
+        ue_notes = notes.filter(examen__ressource__unite_enseignement=ue)
+        ue_data.append({
+            'nom': ue.nom,
+            'code': ue.code,
+            'rang': ue_notes.aggregate(models.Count('id')).get('id__count', 0),  # Calculer le rang si nécessaire
+            'total_etudiants': Etudiant.objects.count(),
+            'notes': ue_notes
+        })
+    
+    # Pour les ressources générales
+    ressources = [
+        {
+            'nom': 'R2.04 - Initiation à la téléphonie d\'entreprise',
+            'coef_ue1': 1.0,
+            'coef_ue2': 1.0,
+            'coef_ue3': 1.0,
+            'note': 8.50
+        },
+        # Ajouter d'autres ressources ici
+    ]
+    
     context = {
         'etudiant': etudiant,
-        'notes': notes,
+        'ues': ue_data,
         'ressources': ressources,
-        'ues': ues,
+        'current_date': datetime.datetime.now().strftime('%d/%m/%Y'),
+        'current_time': datetime.datetime.now().strftime('%H:%M')
     }
+
     pdf = render_to_pdf('main/grade_report_pdf.html', context)
     if pdf:
         response = HttpResponse(pdf, content_type='application/pdf')
@@ -43,6 +68,9 @@ def generate_pdf(request, pk):
         response['Content-Disposition'] = content
         return response
     return redirect('etudiant_detail', pk=pk)
+
+def index(request):
+    return render(request, 'main/index.html')
 
 def import_data(request):
     if request.method == 'POST':
@@ -108,7 +136,6 @@ def import_data(request):
     else:
         form = UploadFileForm()
     return render(request, 'main/import.html', {'form': form})
-
 
 def export_data(request):
     if request.method == 'POST':
@@ -234,7 +261,7 @@ def groupe_detail(request, pk):
 
 def groupe_create(request):
     if request.method == 'POST':
-        form = GroupeForm(request.POST, request.FILES)
+        form = GroupeForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('groupe_list')
@@ -244,26 +271,8 @@ def groupe_create(request):
 
 def groupe_update(request, pk):
     groupe = get_object_or_404(Groupe, pk=pk)
-
-def handle_uploaded_file(f):
-    with open('uploaded_file.csv', 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
-
-def process_uploaded_file(file_path):
-    with open(file_path, newline='') as csvfile:
-        reader = csv.reader(csvfile, delimiter=',')
-        for row in reader:
-            if len(row) != 4:
-                continue  # Ignore invalid rows
-            examen_id, etudiant_id, note, appreciation = row
-            examen = get_object_or_404(Examen, id=examen_id)
-            etudiant = get_object_or_404(Etudiant, id=etudiant_id)
-            Note.objects.create(examen=examen, etudiant=etudiant, note=note, appreciation=appreciation)
-
-def upload_file(request):
     if request.method == 'POST':
-        form = GroupeForm(request.POST, request.FILES, instance=groupe)
+        form = GroupeForm(request.POST, instance=groupe)
         if form.is_valid():
             form.save()
             return redirect('groupe_list')
@@ -307,7 +316,6 @@ def etudiant_update(request, pk):
     else:
         form = EtudiantForm(instance=etudiant)
     return render(request, 'main/etudiant_form.html', {'form': form, 'etudiant': etudiant})
-
 
 def etudiant_delete(request, pk):
     etudiant = get_object_or_404(Etudiant, pk=pk)
@@ -364,7 +372,7 @@ def ressource_detail(request, pk):
     return render(request, 'main/ressource_detail.html', {'ressource': ressource, 'coefficients': coefficients})
 
 def ressource_create(request):
-    if request.method == "POST":
+    if request.method == 'POST':
         form = RessourceForm(request.POST)
         formset = RessourceUEFormSet(request.POST)
         if form.is_valid() and formset.is_valid():
@@ -381,7 +389,7 @@ def ressource_create(request):
 
 def ressource_update(request, pk):
     ressource = get_object_or_404(Ressource, pk=pk)
-    if request.method == "POST":
+    if request.method == 'POST':
         form = RessourceForm(request.POST, instance=ressource)
         formset = RessourceUEFormSet(request.POST, instance=ressource)
         if form.is_valid() and formset.is_valid():
@@ -397,10 +405,8 @@ def ressource_update(request, pk):
 
 def ressource_delete(request, pk):
     ressource = get_object_or_404(Ressource, pk=pk)
-    coefficients = RessourceUE.objects.filter(ressource=ressource)
-    if request.method == "POST":
+    if request.method == 'POST':
         ressource.delete()
-        coefficients.delete()
         return redirect('ressource_list')
     return render(request, 'main/ressource_confirm_delete.html', {'ressource': ressource})
 
@@ -435,12 +441,12 @@ def sae_update(request, pk):
     if request.method == 'POST':
         form = SAEForm(request.POST, instance=sae)
         formset = SaeUEFormSet(request.POST, instance=sae)
-        if form.is_valid():
+        if form.is_valid() and formset.is_valid():
             form.save()
             formset.save()
             if 'save_and_add' in request.POST:
                 return redirect('sae_update', pk=sae.pk)
-            return redirect('sae_detail', sae_id=sae.id)
+            return redirect('sae_detail', pk=sae.pk)
     else:
         form = SAEForm(instance=sae)
         formset = SaeUEFormSet(instance=sae)
@@ -448,10 +454,8 @@ def sae_update(request, pk):
 
 def sae_delete(request, sae_id):
     sae = get_object_or_404(SAE, id=sae_id)
-    coefficients = SaeUE.objects.filter(sae=sae)
     if request.method == 'POST':
         sae.delete()
-        coefficients.delete()
         return redirect('sae_list')
     return render(request, 'main/sae_confirm_delete.html', {'sae': sae})
 
