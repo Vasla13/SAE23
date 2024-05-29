@@ -6,5 +6,9 @@
     <h1>{{ examen.titre }}</h1>
     <p><strong>Date :</strong> {{ examen.date }}</p>
     <p><strong>Coefficient :</strong> {{ examen.coefficient }}</p>
+    <p><strong> Ressource :</strong> {{ examen.ressource }}</p>
+    <p><strong>Enseignant(s) :</strong> {% for enseignant in examen.enseignants.all %}
+        {{ enseignant }} </p>
+    {% endfor %}
     <a href="{% url 'examen_update' examen.pk %}" class="btn btn-secondary mt-3">Modifier</a>
 {% endblock %}
