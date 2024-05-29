@@ -415,8 +415,8 @@ def sae_list(request):
     saes = SAE.objects.all()
     return render(request, 'main/sae_list.html', {'saes': saes})
 
-def sae_detail(request, sae_id):
-    sae = get_object_or_404(SAE, id=sae_id)
+def sae_detail(request, pk):
+    sae = get_object_or_404(SAE, pk=pk)
     coefficients = SaeUE.objects.filter(sae=sae)
     return render(request, 'main/sae_detail.html', {'sae': sae, 'coefficients': coefficients})
 
@@ -452,8 +452,8 @@ def sae_update(request, pk):
         formset = SaeUEFormSet(instance=sae)
     return render(request, 'main/sae_form.html', {'form': form, 'formset': formset})
 
-def sae_delete(request, sae_id):
-    sae = get_object_or_404(SAE, id=sae_id)
+def sae_delete(request, pk):
+    sae = get_object_or_404(SAE, pk=pk)
     if request.method == 'POST':
         sae.delete()
         return redirect('sae_list')
