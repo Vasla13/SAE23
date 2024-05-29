@@ -34,10 +34,10 @@ urlpatterns = [
     
     # URLs for SAE
     path('sae/', views.sae_list, name='sae_list'),
-    path('sae/<int:sae_id>/', views.sae_detail, name='sae_detail'),
+    path('sae/<int:pk>/', views.sae_detail, name='sae_detail'),
     path('sae/new/', views.sae_create, name='sae_create'),
     path('sae/<int:pk>/edit/', views.sae_update, name='sae_update'),
-    path('sae/<int:sae_id>/delete/', views.sae_delete, name='sae_delete'),
+    path('sae/<int:pk>/delete/', views.sae_delete, name='sae_delete'),
 
     # URLs for Enseignant
     path('enseignants/', views.enseignant_list, name='enseignant_list'),

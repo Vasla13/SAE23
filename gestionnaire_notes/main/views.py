@@ -435,14 +435,14 @@ def sae_update(request, pk):
             formset.save()
             if 'save_and_add' in request.POST:
                 return redirect('sae_update', pk=sae.pk)
-            return redirect('sae_detail', sae_id=sae.id)
+            return redirect('sae_detail', pk=sae.pk)
     else:
         form = SAEForm(instance=sae)
         formset = SaeUEFormSet(instance=sae)
     return render(request, 'main/sae_form.html', {'form': form, 'formset': formset})
 
-def sae_delete(request, sae_id):
-    sae = get_object_or_404(SAE, id=sae_id)
+def sae_delete(request, pk):
+    sae = get_object_or_404(SAE, pk=pk)
     coefficients = SaeUE.objects.filter(sae=sae)
     if request.method == 'POST':
         sae.delete()

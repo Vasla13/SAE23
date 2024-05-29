@@ -32,7 +32,7 @@ class Ressource(models.Model):
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.code} - {self.nom}"
+        return f"R{self.code} - {self.nom}"
     
 class RessourceUE(models.Model):
     ressource = models.ForeignKey(Ressource, on_delete=models.CASCADE)
@@ -48,7 +48,7 @@ class SAE(models.Model):
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.code} - {self.nom}"
+        return f"SAÉ{self.code} - {self.nom}"
 
 class SaeUE(models.Model):
     sae = models.ForeignKey(SAE, on_delete=models.CASCADE)
