@@ -6,7 +6,11 @@
     <h1>{{ examen.titre }}</h1>
     <p><strong>Date :</strong> {{ examen.date }}</p>
     <p><strong>Coefficient :</strong> {{ examen.coefficient }}</p>
-    <p><strong> Ressource :</strong> {{ examen.ressource }}</p>
+    {% if examen.ressource is not None %}
+        <p><strong> Ressource :</strong> {{ examen.ressource }}</p>
+    {% else %}
+        <p><strong> Sae :</strong> {{ examen.sae }}</p>
+    {% endif %}
     <p><strong>Enseignant(s) :</strong> {% for enseignant in examen.enseignants.all %}
         {{ enseignant }} </p>
     {% endfor %}

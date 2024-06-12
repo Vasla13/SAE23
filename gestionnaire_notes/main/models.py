@@ -33,7 +33,7 @@ class Ressource(models.Model):
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.code} - {self.nom}"
+        return f"R{self.code} - {self.nom}"
 
 class RessourceUE(models.Model):
     ressource = models.ForeignKey(Ressource, on_delete=models.CASCADE)
@@ -49,7 +49,7 @@ class SAE(models.Model):
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.code} - {self.nom}"
+        return f"SAÉ{self.code} - {self.nom}"
 
 class SaeUE(models.Model):
     sae = models.ForeignKey(SAE, on_delete=models.CASCADE)
@@ -60,7 +60,7 @@ class SaeUE(models.Model):
         unique_together = ('sae', 'unite_enseignement')
 
 class Enseignant(models.Model):
-    id = models.AutoField(primary_key=True)  # Ajout du champ id
+    numero_professeur = models.CharField(max_length=8)
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100)
     email = models.EmailField()
@@ -72,13 +72,21 @@ class Examen(models.Model):
     id = models.AutoField(primary_key=True)  # Ajout du champ id
     titre = models.CharField(max_length=100)
     enseignants = models.ManyToManyField(Enseignant, related_name='examens')
-    ressource = models.ForeignKey(Ressource, on_delete=models.CASCADE, null=True)
+    ressource = models.ForeignKey(Ressource, on_delete=models.CASCADE, null=True, blank=True)
+    sae = models.ForeignKey(SAE, on_delete=models.CASCADE, null=True, blank=True)
     date = models.DateField(null=True, blank=True)
     coefficient = models.FloatField(default=1.0)
 
     def __str__(self):
         noms_enseignants = "_".join([enseignant.nom for enseignant in self.enseignants.all()])
         return f"{self.titre}_{noms_enseignants}"
+    
+    def clean(self):
+        from django.core.exceptions import ValidationError
+        if self.ressource and self.sae:
+            raise ValidationError('Un examen ne peut pas être lié à la fois à une ressource et à une SAE.')
+        if not self.ressource and not self.sae:
+            raise ValidationError('Un examen doit être lié soit à une ressource, soit à une SAE.')
 
 class Note(models.Model):
     examen = models.ForeignKey(Examen, on_delete=models.CASCADE)

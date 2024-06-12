@@ -36,12 +36,12 @@ SaeUEFormSet = inlineformset_factory(
 class EnseignantForm(forms.ModelForm):
     class Meta:
         model = Enseignant
-        fields = ['nom', 'prenom', 'email']  # Modification des champs
+        fields = ['numero_professeur', 'nom', 'prenom', 'email']  # Modification des champs
 
 class ExamenForm(forms.ModelForm):
     class Meta:
         model = Examen
-        fields = ['titre', 'enseignants', 'ressource', 'date', 'coefficient']
+        fields = ['titre', 'enseignants', 'ressource', 'sae']
 
 class NoteForm(forms.ModelForm):
     class Meta:

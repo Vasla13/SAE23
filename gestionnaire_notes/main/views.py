@@ -25,37 +25,39 @@ def paginate_notes(notes, notes_per_page=10):
 
 def generate_pdf(request, pk):
     etudiant = get_object_or_404(Etudiant, pk=pk)
-    ues = UE.objects.all()  # Ou filtrez selon les UEs de l'étudiant
+    ues = UE.objects.all()
     notes = Note.objects.filter(etudiant=etudiant)
-    
-    # Regrouper les notes par UE
+
     ue_data = []
     for ue in ues:
-        ue_notes = notes.filter(examen__ressource__unite_enseignement=ue)
-        ue_data.append({
-            'nom': ue.nom,
-            'code': ue.code,
-            'rang': ue_notes.aggregate(models.Count('id')).get('id__count', 0),  # Calculer le rang si nécessaire
-            'total_etudiants': Etudiant.objects.count(),
-            'notes': ue_notes
-        })
-    
-    # Pour les ressources générales
-    ressources = [
-        {
-            'nom': 'R2.04 - Initiation à la téléphonie d\'entreprise',
-            'coef_ue1': 1.0,
-            'coef_ue2': 1.0,
-            'coef_ue3': 1.0,
-            'note': 8.50
-        },
-        # Ajouter d'autres ressources ici
-    ]
-    
+        # Filtrer les examens associés aux ressources de cette UE
+        ressources_ue = RessourceUE.objects.filter(unite_enseignement=ue).values_list('ressource', flat=True)
+        examens_ue = Examen.objects.filter(ressource__in=ressources_ue)
+        ue_notes = notes.filter(examen__in=examens_ue)
+
+        if ue_notes.exists():
+            moyenne_etudiant = ue_notes.aggregate(Avg('note'))['note__avg']
+            moyenne_groupe = Note.objects.filter(examen__in=examens_ue, etudiant__groupe=etudiant.groupe).aggregate(Avg('note'))['note__avg']
+            note_max = ue_notes.aggregate(Max('note'))['note__max']
+            note_min = ue_notes.aggregate(Min('note'))['note__min']
+            ressources = RessourceUE.objects.filter(unite_enseignement=ue)
+            saes = SaeUE.objects.filter(unite_enseignement=ue)
+
+            ue_data.append({
+                'nom': ue.nom,
+                'code': ue.code,
+                'moyenne_etudiant': moyenne_etudiant,
+                'moyenne_groupe': moyenne_groupe,
+                'note_max': note_max,
+                'note_min': note_min,
+                'ressources': ressources,
+                'saes': saes
+            })
+
     context = {
         'etudiant': etudiant,
+        'notes' : notes,
         'ues': ue_data,
-        'ressources': ressources,
         'current_date': datetime.datetime.now().strftime('%d/%m/%Y'),
         'current_time': datetime.datetime.now().strftime('%H:%M')
     }
@@ -148,9 +150,9 @@ def export_data(request):
                 etudiant_name = "etudiants"
 
             response = HttpResponse(content_type='text/csv')
-            response['Content-Disposition'] = f'attachment; filename="Releve_de_note_de_{etudiant_name}.csv"'
+            response['Content-Disposition'] = f'attachment; filename="gestionnaire_notes.csv"'
             writer = csv.writer(response)
-            writer.writerow(['Relevé de Notes'])
+            writer.writerow(['Gestionnaire notes'])
             writer.writerow([])  # Empty row for spacing
 
             # Exporting Etudiants
@@ -196,7 +198,7 @@ def export_data(request):
                 writer.writerow(['Examens'])
                 writer.writerow(['ID', 'Titre', 'N°professeurs', 'Code Ressource','Date', 'Coefficient'])
                 for examen in examens:
-                    writer.writerow([examen.id, examen.titre, examen.enseignants.all, examen.ressource.code, examen.date, examen.coefficient])
+                    writer.writerow([examen.id, examen.titre, examen.ressource_id, examen.date, examen.coefficient])
                 writer.writerow([])  # Empty row for spacing
 
             # Exporting Notes
@@ -294,7 +296,8 @@ def etudiant_list(request):
 
 def etudiant_detail(request, pk):
     etudiant = get_object_or_404(Etudiant, pk=pk)
-    return render(request, 'main/etudiant_detail.html', {'etudiant': etudiant})
+    notes = Note.objects.filter(etudiant=etudiant)
+    return render(request, 'main/etudiant_detail.html', {'etudiant': etudiant, 'notes': notes})
 
 def etudiant_create(request):
     if request.method == 'POST':
