@@ -14,7 +14,7 @@
         <p>Aucune photo disponible</p>
     {% endif %}
     <a href="{% url 'etudiant_update' etudiant.pk %}" class="btn btn-secondary mt-3">Modifier</a>
-
+    <p></p>
     <h3>Notes</h3>
     <table class="table">
         <thead>
@@ -27,7 +27,7 @@
         <tbody>
             {% for note in notes %}
             <tr>
-                <td>{{ note.examen.titre }}</td>
+                <td>{{ note.examen }}</td>
                 <td>{{ note.note }}</td>
                 <td>{{ note.appreciation }}</td>
             </tr>

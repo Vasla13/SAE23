@@ -150,9 +150,9 @@ def export_data(request):
                 etudiant_name = "etudiants"
 
             response = HttpResponse(content_type='text/csv')
-            response['Content-Disposition'] = f'attachment; filename="Releve_de_note_de_{etudiant_name}.csv"'
+            response['Content-Disposition'] = f'attachment; filename="gestionnaire_notes.csv"'
             writer = csv.writer(response)
-            writer.writerow(['Relevé de Notes'])
+            writer.writerow(['Gestionnaire notes'])
             writer.writerow([])  # Empty row for spacing
 
             # Exporting Etudiants
@@ -198,7 +198,7 @@ def export_data(request):
                 writer.writerow(['Examens'])
                 writer.writerow(['ID', 'Titre', 'N°professeurs', 'Code Ressource','Date', 'Coefficient'])
                 for examen in examens:
-                    writer.writerow([examen.id, examen.titre, examen.enseignants.all, examen.ressource.code, examen.date, examen.coefficient])
+                    writer.writerow([examen.id, examen.titre, examen.ressource_id, examen.date, examen.coefficient])
                 writer.writerow([])  # Empty row for spacing
 
             # Exporting Notes
@@ -296,7 +296,8 @@ def etudiant_list(request):
 
 def etudiant_detail(request, pk):
     etudiant = get_object_or_404(Etudiant, pk=pk)
-    return render(request, 'main/etudiant_detail.html', {'etudiant': etudiant})
+    notes = Note.objects.filter(etudiant=etudiant)
+    return render(request, 'main/etudiant_detail.html', {'etudiant': etudiant, 'notes': notes})
 
 def etudiant_create(request):
     if request.method == 'POST':
