@@ -58,14 +58,28 @@
             <li>Ressources:
                 <ul>
                     {% for ressource in ue.ressources %}
-                        <li>{{ ressource.ressource.nom }} - Coefficient: {{ ressource.coefficient }}</li>
+                        <li>{{ ressource.ressource.nom }} - Coefficient: {{ ressource.coefficient }} - Evaluations:</li>
+                        <ul>
+                            {%for note in notes%}
+                                {% if note.examen.ressource_id == ressource.ressource.id %}
+                                    <li>{{ note.examen }} : {{ note.note }}<li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
                     {% endfor %}
                 </ul>
             </li>
             <li>SAEs:
                 <ul>
                     {% for sae in ue.saes %}
-                        <li>{{ sae.sae.nom }} - Coefficient: {{ sae.coefficient }}</li>
+                        <li>{{ sae.sae.nom }} - Coefficient: {{ sae.coefficient }} - Evaluations:</li>
+                        <ul>
+                            {%for note in notes%}
+                                {% if note.examen.sae_id == sae.sae.id %}
+                                    <li>{{ note.examen }} : {{ note.note }}<li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
                     {% endfor %}
                 </ul>
             </li>

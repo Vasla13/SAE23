@@ -56,6 +56,7 @@ def generate_pdf(request, pk):
 
     context = {
         'etudiant': etudiant,
+        'notes' : notes,
         'ues': ue_data,
         'current_date': datetime.datetime.now().strftime('%d/%m/%Y'),
         'current_time': datetime.datetime.now().strftime('%H:%M')

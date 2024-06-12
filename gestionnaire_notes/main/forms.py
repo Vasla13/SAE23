@@ -41,7 +41,7 @@ class EnseignantForm(forms.ModelForm):
 class ExamenForm(forms.ModelForm):
     class Meta:
         model = Examen
-        fields = ['titre', 'enseignants', 'ressource', 'date', 'coefficient']
+        fields = ['titre', 'enseignants', 'ressource', 'sae']
 
 class NoteForm(forms.ModelForm):
     class Meta:
