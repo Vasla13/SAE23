@@ -60,7 +60,7 @@ class SaeUE(models.Model):
         unique_together = ('sae', 'unite_enseignement')
 
 class Enseignant(models.Model):
-    id = models.AutoField(primary_key=True)  # Ajout du champ id
+    numero_professeur = models.CharField(max_length=8)
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100)
     email = models.EmailField()
