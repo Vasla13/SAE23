@@ -4,4 +4,4 @@ myenv\Scripts\activate  # Pour Windows
 # ou
 source myenv/bin/activate  # Pour macOS et Linux
 
-pip install django, Pillow
+pip install django, Pillow, xhtml2pdf
